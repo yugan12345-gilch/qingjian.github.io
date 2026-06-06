@@ -1,0 +1,1513 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>轻·简 次元</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        :root {
+            --ios-easing: cubic-bezier(0.23, 1, 0.32, 1);
+            --glass-bg: rgba(255, 255, 255, 0.28);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-blur: blur(30px) saturate(210%);
+            --qq-blue: #12B7F5;
+            --qq-bg: #F5F6FA;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+            --title-size: 64px;
+            --subtitle-size: 14px;
+            --btn-radius: 95px;
+            --btn-padding: 22px 10px;
+            --fab-size: 40px;
+            --bottom-space: 60px;
+            --body-bg: #AEDEFF;
+            --window-radius: 48px;
+            --shadow-strength: 0.18;
+            --border-width: 1px;
+            --title-glow: 0 0 20px rgba(255,255,255,0.55);
+            --title-blur: 0.4px;
+            --title-weight: 800;
+            --title-spacing: -3px;
+            --subtitle-bg: rgba(0,0,0,0.3);
+            --subtitle-color: #fff;
+            --quote-color: rgba(0,0,0,0.65);
+            --quote-size: 16px;
+            --btn-color: #000;
+            --btn-weight: 700;
+            --fab-icon-size: 24px;
+            --version-color: rgba(0,0,0,0.3);
+            --window-shadow: 0 60px 120px rgba(0,0,0,0.3);
+            --bubble-radius: 20px;
+            --avatar-size: 42px;
+            --nav-height: 75px;
+            --input-height: 45px;
+            --title-brightness: 1.5;
+            --title-contrast: 1.2;
+        }
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--body-bg);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        .bg-layer {
+            position: absolute;
+            inset: 0;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            will-change: opacity;
+            z-index: -2;
+        }
+        #bg-secondary {
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 2.5s ease-in-out;
+        }
+        #bg-primary {
+            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+        }
+        .title-wrap {
+            text-align: center;
+            margin-bottom: 70px;
+            animation: iosEntry 1s var(--ios-easing) forwards;
+            width: 85%;
+            z-index: 1;
+            position: relative;
+        }
+        .main-title {
+            font-size: var(--title-size);
+            font-weight: var(--title-weight);
+            letter-spacing: var(--title-spacing);
+            line-height: 1;
+            position: relative;
+            color: transparent;
+            background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65), rgba(255,255,255,0.85));
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: blur(var(--title-blur)) brightness(var(--title-brightness)) contrast(var(--title-contrast));
+            text-shadow: var(--title-glow), 0 4px 8px rgba(0,0,0,0.15);
+            animation: liquidFloat 6s ease-in-out infinite alternate;
+        }
+        @keyframes liquidFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(0, -1px) scale(1.005); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        .sub-title-tag {
+            font-size: var(--subtitle-size);
+            font-weight: 700;
+            color: var(--subtitle-color);
+            background: var(--subtitle-bg);
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .quote-box {
+            margin-top: 40px;
+            min-height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #quoteDisplay {
+            color: var(--quote-color);
+            font-size: var(--quote-size);
+            font-weight: 500;
+            line-height: 1.6;
+            max-width: 320px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            padding: 10px 20px;
+            transition: color 0.3s;
+        }
+        .btn-glass {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: var(--border-width) solid var(--glass-border);
+            border-radius: var(--btn-radius);
+            box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.6), var(--shadow);
+        }
+        .dynamic-btn {
+            transition: transform 0.3s var(--ios-easing), filter 0.3s ease;
+            cursor: pointer;
+        }
+        .dynamic-btn:active {
+            transform: scale(0.92);
+            filter: brightness(1.1);
+        }
+        .bottom-bar {
+            position: fixed;
+            bottom: calc(var(--bottom-space) + env(safe-area-inset-bottom));
+            width: 92%;
+            max-width: 420px;
+            display: flex;
+            gap: 30px;
+            z-index: 10;
+        }
+        .btn-pay {
+            padding: var(--btn-padding);
+            color: var(--btn-color);
+            font-size: 16px;
+            font-weight: var(--btn-weight);
+            text-align: center;
+            min-width: 160px;
+        }
+        .fab-group {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 99;
+        }
+        .fab {
+            width: var(--fab-size);
+            height: var(--fab-size);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fab-icon-size);
+        }
+        .qqgroup-btn {
+            padding: 8px 18px 8px 10px;
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 99;
+        }
+        .qqgroup-btn img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: contain;
+        }
+        .version-info {
+            position: fixed;
+            left: 25px;
+            bottom: 25px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--version-color);
+            letter-spacing: 1.5px;
+            z-index: 5;
+        }
+        .mask {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0);
+            transition: all var(--mask-transition-time, 0.3s) var(--ios-easing);
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .mask.show {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px) saturate(150%);
+            pointer-events: all;
+        }
+        .window {
+            position: absolute;
+            background: var(--qq-bg);
+            border-radius: var(--window-radius) !important;
+            overflow: hidden;
+            box-shadow: var(--window-shadow);
+            opacity: 0;
+            transition: all 0.6s var(--ios-easing);
+            will-change: transform, width, height, left, top;
+        }
+        .window.active {
+            width: 94% !important;
+            height: 84vh !important;
+            left: 3% !important;
+            top: 8vh !important;
+            opacity: 1;
+        }
+        .window.fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            left: 0 !important;
+            top: 0 !important;
+            border-radius: 0 !important;
+        }
+        .window-veil {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(45px);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .window-veil.show {
+            opacity: 1;
+        }
+        .float-controls {
+            position: fixed;
+            top: 30px;
+            right: 25px;
+            display: flex;
+            gap: 12px;
+            z-index: 2100;
+            opacity: 0;
+            transition: 0.4s var(--ios-easing);
+            pointer-events: none;
+        }
+        .float-controls.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .float-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 18px;
+        }
+        .qq-chat-wrap {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .qq-nav {
+            height: var(--nav-height);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            border-bottom: 0.5px solid var(--glass-border);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+        }
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: transparent;
+        }
+        .bubble {
+            padding: 14px 18px;
+            font-size: 15px;
+            max-width: 80%;
+            line-height: 1.5;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+        }
+        .msg-left .bubble {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 0.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: var(--bubble-radius);
+            border-bottom-left-radius: 5px;
+            color: #000;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .msg-right .bubble {
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 0.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--bubble-radius);
+            border-bottom-right-radius: 5px;
+            color: #fff;
+            align-self: flex-end;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .msg-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        .msg-right {
+            flex-direction: row-reverse;
+        }
+        .qq-input-bar {
+            padding: 15px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-top: 0.5px solid var(--glass-border);
+            display: flex;
+            gap: 15px;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
+        }
+        .input-real {
+            flex: 1;
+            min-width: 0;
+            height: var(--input-height);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 0.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 22.5px;
+            padding: 0 20px;
+            outline: none;
+            font-size: 15px;
+            color: #000;
+        }
+        .input-real::placeholder {
+            color: rgba(0, 0, 0, 0.5);
+        }
+        .avatar {
+            width: var(--avatar-size);
+            height: var(--avatar-size);
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #shopPage {
+            height: 100%;
+            overflow-y: auto;
+            padding: 24px 20px;
+            background: transparent;
+            color: #000;
+        }
+        #shopPage .panel-title {
+            margin-bottom: 16px;
+            color: #000;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3);
+        }
+        #shopPage h2,
+        #shopPage h3,
+        #shopPage p {
+            color: #000;
+        }
+        #shopPage .panel-group {
+          background: rgba(255, 255, 255, 0.5);   
+          backdrop-filter: var(--glass-blur);
+          -webkit-backdrop-filter: var(--glass-blur);
+          border: var(--border-width) solid var(--glass-border);
+          border-radius: 24px;
+          padding: 20px;
+          margin-bottom: 20px;
+          box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4), 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        #shopPage .panel-group h3 {
+            color: #000;
+            text-shadow: none;
+        }
+        #shopPage .panel-group p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+        #shopPage .panel-group span {
+            color: #000;
+        }
+        #shopPage .gold-price {
+            color: inherit;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+        }
+        #shopPage .panel-btn {
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        #shopPage .panel-btn.panel-success {
+            background: var(--qq-blue);
+            border: none;
+        }
+
+        .gold-price {
+            display: inline-block;
+            font-weight: 900;
+            background: linear-gradient(75deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes iosEntry {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes floating {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes shake {
+            10%,90% { transform: translateX(-2px); }
+            20%,80% { transform: translateX(4px); }
+            30%,50%,70% { transform: translateX(-6px); }
+            40%,60% { transform: translateX(6px); }
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes spinIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes blink { 50% { opacity: 0; } }
+        .float-anim { animation: floating 3s ease-in-out infinite; }
+        .shake-anim { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; color: #0D0D0D !important; }
+        .refreshing .icon-spin { animation: spinIcon 0.8s linear infinite; display: inline-block; }
+        .cursor { border-right: 2px solid var(--qq-blue); margin-left: 2px; animation: blink 0.8s infinite; }
+
+        /* 无极拖拽 */
+        .drag-mode-active .draggable {
+            outline: 2px dashed rgba(255, 255, 255, 0.6) !important;
+            outline-offset: 4px;
+            cursor: move;
+            transition: none !important;
+            animation: none !important;
+            user-select: none;
+        }
+        .drag-mode-active .resizable {
+            outline: 2px solid var(--qq-blue) !important;
+            outline-offset: 4px;
+        }
+        .resize-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--qq-blue);
+            border-radius: 50%;
+            right: -8px;
+            bottom: -8px;
+            cursor: nwse-resize;
+            z-index: 99999;
+            display: none;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .drag-mode-active .resize-handle { display: block; }
+        .drag-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 12px 24px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 100000;
+            display: none;
+            box-shadow: var(--shadow);
+            white-space: nowrap;
+        }
+        .drag-mode-active .drag-indicator { display: block; }
+
+        /* 超级面板入口 */
+        #superPanelBtn {
+            position: fixed; top: 20px; left: 20px; width: 56px; height: 56px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: var(--border-width) solid var(--glass-border);
+            border-radius: 28px;
+            color: #fff; font-weight: 600; font-size: 11px;
+            display: none;
+            align-items: center; justify-content: center;
+            z-index: 2000; cursor: pointer;
+            box-shadow: var(--shadow), inset 0 1px 3px rgba(255,255,255,0.5);
+            text-align: center; line-height: 1.3;
+            transition: transform 0.3s var(--ios-easing);
+        }
+        #superPanelBtn:active { transform: scale(0.92); }
+
+
+        #superPanel {
+            position: fixed; inset: 0; z-index: 3000;
+            display: none; align-items: flex-end; justify-content: center;
+        }
+        #superPanel.show { display: flex; }
+        .panel-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0);
+            backdrop-filter: blur(0);
+            -webkit-backdrop-filter: blur(0);
+            transition: all 0.4s var(--ios-easing);
+        }
+        #superPanel.show .panel-overlay {
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(15px) saturate(150%);
+            -webkit-backdrop-filter: blur(15px) saturate(150%);
+        }
+        .panel-box {
+            display: flex; flex-direction: column; padding: 0;
+            width: 100%; max-width: 100%; max-height: 85vh;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: var(--border-width) solid var(--glass-border);
+            border-radius: 40px 40px 0 0;
+            overflow-y: auto; color: #fff; position: relative;
+            box-shadow: var(--shadow), inset 0 1px 4px rgba(255,255,255,0.3);
+            transform: translateY(100%);
+            transition: transform 0.4s var(--ios-easing);
+            border-bottom: none;
+        }
+        #superPanel.show .panel-box { transform: translateY(0); }
+        .panel-box::-webkit-scrollbar { width: 6px; }
+        .panel-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 3px; }
+        .panel-fixed-header { flex-shrink: 0; padding: 25px 20px 10px; background: transparent; border-radius: 40px 40px 0 0; }
+        .panel-scroll-content { flex: 1; overflow-y: auto; padding: 0 20px 35px; }
+        .panel-drag-handle { width: 100%; height: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; cursor: grab; }
+        .panel-drag-handle:active { cursor: grabbing; }
+        .panel-drag-handle::after { content: ''; width: 50px; height: 5px; background: rgba(255,255,255,0.5); border-radius: 3px; }
+        .panel-close { display: none; }
+        .panel-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 20px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+        .panel-tabs { display: flex; gap: 4px; margin-bottom: 22px; flex-wrap: wrap; justify-content: center; }
+        .panel-tab { padding: 8px 10px; border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(15px) saturate(200%); text-align: center; font-size: 11px; font-weight: 500; cursor: pointer; border: var(--border-width) solid var(--glass-border); transition: all 0.25s; white-space: nowrap; color: rgba(255,255,255,0.85); }
+        .panel-tab:hover, .panel-tab.active { background: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.6); color: #fff; }
+        .panel-page { display: none; flex-direction: column; gap: 16px; }
+        .panel-page.show { display: flex; }
+        .panel-group { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border-radius: 24px; padding: 18px; border: var(--border-width) solid rgba(255,255,255,0.15); }
+        .panel-group h3 { font-size: 14px; margin-bottom: 14px; font-weight: 600; color: rgba(255,255,255,0.9); }
+        .panel-item { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+        .panel-item-row { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; }
+        .panel-item label { font-size: 12px; opacity: 0.85; }
+        .panel-input, .panel-select, .panel-textarea { background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border: var(--border-width) solid rgba(255,255,255,0.2); border-radius: 16px; padding: 10px 14px; color: #fff; outline: none; font-size: 13px; width: 100%; }
+        .panel-input:focus { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.15); }
+        .panel-input::placeholder { color: rgba(255,255,255,0.4); }
+        .panel-textarea { min-height: 60px; resize: vertical; }
+        .panel-btn { padding: 10px 16px; border-radius: 20px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: var(--border-width) solid var(--glass-border); color: #fff; font-weight: 500; cursor: pointer; font-size: 13px; transition: all 0.25s; box-shadow: inset 0 1px 3px rgba(255,255,255,0.4); }
+        .panel-btn:hover { background: rgba(255,255,255,0.3); }
+        .panel-btn:active { transform: scale(0.96); }
+        .panel-btn-small { padding: 6px 12px; font-size: 11px; }
+        .panel-danger { background: rgba(255,70,70,0.3); border-color: rgba(255,100,100,0.45); }
+        .panel-success { background: rgba(46,204,113,0.25); border-color: rgba(46,204,113,0.45); }
+        .panel-warning { background: rgba(255,180,0,0.25); border-color: rgba(255,180,0,0.45); }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #fff; border-radius: 50%; cursor: pointer; }
+        input[type="color"] { width: 100%; height: 40px; border: none; background: transparent; cursor: pointer; }
+        input[type="color"]::-webkit-color-swatch { border: 1px solid rgba(255,255,255,0.25); border-radius: 16px; }
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .repo-item { background: rgba(255,255,255,0.06); border-radius: 18px; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.12); }
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        [id$="_val"] { min-width: 40px; display: inline-block; text-align: right; }
+        #configImport, #p_localbg { display: none; }
+        .css-var-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; font-size: 11px; }
+        #gamePage{background:transparent;}#gameIframe{background:transparent;border-radius:var(--window-radius);}
+    </style>
+</head>
+<body>
+
+<div id="bg-primary" class="bg-layer"></div>
+<div id="bg-secondary" class="bg-layer"></div>
+
+<div class="drag-indicator" id="dragIndicator">拖拽模式 · 拖动移动 · 拉动右下角调整大小 · 按 ESC 退出</div>
+
+<div id="superPanelBtn" onclick="SuperPanel.open()">超级<br>自定义</div>
+
+<!-- 超级面板 -->
+<div id="superPanel">
+    <div class="panel-overlay" onclick="SuperPanel.close()"></div>
+    <div class="panel-box">
+        <div class="panel-fixed-header">
+            <div class="panel-drag-handle"></div>
+            <div class="panel-title">超级自定义</div>
+            <div class="panel-tabs">
+                <div class="panel-tab active" data-tab="0">外观</div>
+                <div class="panel-tab" data-tab="1">文字</div>
+                <div class="panel-tab" data-tab="2">尺寸</div>
+                <div class="panel-tab" data-tab="3">接口</div>
+                <div class="panel-tab" data-tab="4">按钮</div>
+                <div class="panel-tab" data-tab="5">聊天</div>
+                <div class="panel-tab" data-tab="6">动画</div>
+                <div class="panel-tab" data-tab="7">CSS变量</div>
+                <div class="panel-tab" data-tab="8">拖拽（测试）</div>
+                <div class="panel-tab" data-tab="9">数据管理</div>
+                <div class="panel-tab" data-tab="10">AI管理</div>
+            </div>
+        </div>
+        <div class="panel-scroll-content">
+            <div class="panel-page show" data-page="0">
+                <div class="panel-group"><h3>主题色</h3><div class="panel-item"><label>主题蓝</label><input type="color" id="p_themeColor"></div><div class="panel-item"><label>背景色</label><input type="color" id="p_bgColor"></div><div class="panel-item"><label>气泡蓝</label><input type="color" id="p_bubbleColor"></div></div>
+                <div class="panel-group"><h3>其他颜色</h3><div class="panel-item"><label>副标题背景</label><input class="panel-input" id="p_subtitleBg"></div><div class="panel-item"><label>副标题颜色</label><input type="color" id="p_subtitleColor"></div><div class="panel-item"><label>诗词颜色</label><input type="color" id="p_quoteColor"></div><div class="panel-item"><label>按钮文字色</label><input type="color" id="p_btnColor"></div><div class="panel-item"><label>版本颜色</label><input type="color" id="p_versionColor"></div></div>
+                <div class="panel-group"><h3>玻璃效果</h3><div class="panel-item"><label>透明度 <span id="p_gbg_val">0.28</span></label><input type="range" id="p_gbg" min="0" max="1" step="0.01"></div><div class="panel-item"><label>模糊度 <span id="p_blur_val">30</span></label><input type="range" id="p_blur" min="0" max="80"></div><div class="panel-item"><label>饱和度 <span id="p_sat_val">210</span></label><input type="range" id="p_sat" min="100" max="500"></div><div class="panel-item"><label>边框粗细 <span id="p_border_val">1</span></label><input type="range" id="p_border" min="0" max="6" step="0.5"></div></div>
+                <div class="panel-group"><h3>阴影</h3><div class="panel-item"><label>阴影强度 <span id="p_shadow_val">0.18</span></label><input type="range" id="p_shadow" min="0" max="0.6" step="0.02"></div></div>
+                <div class="panel-group"><h3>标题特效</h3><div class="panel-item"><label>标题发光</label><input class="panel-input" id="p_titleGlow" placeholder="0 0 20px rgba(255,255,255,0.55)"></div><div class="panel-item"><label>标题模糊 <span id="p_titleBlur_val">0.4</span></label><input type="range" id="p_titleBlur" min="0" max="3" step="0.1"></div><div class="panel-item"><label>标题字重 <span id="p_titleWeight_val">800</span></label><input type="range" id="p_titleWeight" min="300" max="900" step="100"></div><div class="panel-item"><label>标题字间距 <span id="p_titleSpacing_val">-3</span></label><input type="range" id="p_titleSpacing" min="-10" max="10"></div></div>
+                <button class="panel-btn panel-success" onclick="SuperPanel.applyStyle()">应用外观</button>
+            </div>
+            <div class="panel-page" data-page="1">
+                <div class="panel-group"><h3>主界面</h3><div class="panel-item"><label>主标题</label><input class="panel-input" id="p_title"></div><div class="panel-item"><label>副标题</label><input class="panel-input" id="p_sub"></div><div class="panel-item"><label>版本号</label><input class="panel-input" id="p_ver"></div><div class="panel-item"><label>诗词占位</label><input class="panel-input" id="p_quotePlaceholder"></div></div>
+                <div class="panel-group"><h3>按钮</h3><div class="panel-item"><label>按钮1文字</label><input class="panel-input" id="p_btn1Text"></div><div class="panel-item"><label>按钮1价格</label><input class="panel-input" id="p_btn1Price"></div><div class="panel-item"><label>按钮2文字</label><input class="panel-input" id="p_btn2Text"></div><div class="panel-item"><label>按钮2价格</label><input class="panel-input" id="p_btn2Price"></div><div class="panel-item"><label>QQ群文字</label><input class="panel-input" id="p_qqText"></div></div>
+                <div class="panel-group"><h3>机器人</h3><div class="panel-item"><label>名称</label><input class="panel-input" id="p_botName"></div><div class="panel-item"><label>在线状态</label><input class="panel-input" id="p_botOnline"></div><div class="panel-item"><label>输入中</label><input class="panel-input" id="p_botTyping"></div><div class="panel-item"><label>欢迎语</label><textarea class="panel-textarea" id="p_welcomeMsg"></textarea></div><div class="panel-item"><label>无匹配回复</label><input class="panel-input" id="p_noMatchMsg"></div></div>
+                <button class="panel-btn panel-success" onclick="SuperPanel.applyText()">应用文字</button>
+            </div>
+            <div class="panel-page" data-page="2">
+                <div class="panel-group"><h3>字体</h3><div class="panel-item"><label>标题 <span id="p_tsize_val">64</span></label><input type="range" id="p_tsize" min="20" max="150"></div><div class="panel-item"><label>副标题 <span id="p_subsize_val">14</span></label><input type="range" id="p_subsize" min="8" max="40"></div><div class="panel-item"><label>诗词 <span id="p_quoteSize_val">16</span></label><input type="range" id="p_quoteSize" min="10" max="30"></div><div class="panel-item"><label>按钮文字</label><input type="number" id="p_btnFontSize" min="10" max="30" class="panel-input"></div></div>
+                <div class="panel-group"><h3>圆角</h3><div class="panel-item"><label>按钮 <span id="p_br_val">28</span></label><input type="range" id="p_br" min="0" max="60"></div><div class="panel-item"><label>窗口 <span id="p_winr_val">48</span></label><input type="range" id="p_winr" min="0" max="80"></div><div class="panel-item"><label>气泡 <span id="p_bubbleR_val">20</span></label><input type="range" id="p_bubbleR" min="0" max="40"></div></div>
+                <div class="panel-group"><h3>间距</h3><div class="panel-item"><label>悬浮按钮 <span id="p_fabs_val">56</span></label><input type="range" id="p_fabs" min="40" max="100"></div><div class="panel-item"><label>底部间距 <span id="p_bsp_val">60</span></label><input type="range" id="p_bsp" min="20" max="150"></div><div class="panel-item"><label>标题上边距</label><input type="range" id="p_titleMargin" min="0" max="150"></div><div class="panel-item"><label>按钮内边距</label><input class="panel-input" id="p_btnPadding"></div></div>
+                <div class="panel-group"><h3>其他尺寸</h3><div class="panel-item"><label>头像 <span id="p_avatar_val">42</span></label><input type="range" id="p_avatar" min="30" max="80"></div><div class="panel-item"><label>导航高度 <span id="p_nav_val">75</span></label><input type="range" id="p_nav" min="50" max="120"></div><div class="panel-item"><label>输入框高度 <span id="p_input_val">45</span></label><input type="range" id="p_input" min="35" max="70"></div><div class="panel-item"><label>图标大小 <span id="p_icon_val">24</span></label><input type="range" id="p_icon" min="16" max="40"></div></div>
+                <button class="panel-btn panel-success" onclick="SuperPanel.applySize()">应用尺寸</button>
+            </div>
+            <div class="panel-page" data-page="3">
+                <div class="panel-group"><h3>图片接口</h3><div class="panel-item"><label>壁纸API</label><input class="panel-input" id="p_bgapi"></div><div class="panel-item"><label>名人名言 API</label><input class="panel-input" id="p_quoteApi"></div></div>
+                <div class="panel-group"><h3>头像链接</h3><div class="panel-item"><label>机器人头像</label><input class="panel-input" id="p_botAvatar"></div><div class="panel-item"><label>用户头像</label><input class="panel-input" id="p_userAvatar"></div><div class="panel-item"><label>QQ群图标</label><input class="panel-input" id="p_qqIcon"></div></div>
+                <div class="panel-group"><h3>跳转链接</h3><div class="panel-item"><label>按钮1链接</label><input class="panel-input" id="p_url1"></div><div class="panel-item"><label>按钮2链接</label><input class="panel-input" id="p_url2"></div><div class="panel-item"><label>QQ群链接</label><input class="panel-input" id="p_qqUrl"></div></div>
+                <div class="panel-group"><h3>本地壁纸</h3><div class="btn-group"><button class="panel-btn" onclick="SuperPanel.selectLocalBg()">选择本地图片</button><button class="panel-btn" onclick="SuperPanel.clearLocalBg()">清除本地壁纸</button></div><input type="file" id="p_localbg" accept="image/*"></div>
+                <button class="panel-btn panel-success" onclick="SuperPanel.applyConfig()">应用接口</button>
+            </div>
+            <div class="panel-page" data-page="4">
+                <div class="panel-group"><h3>底部按钮组</h3><div class="btn-group"><button class="panel-btn" onclick="SuperPanel.addBottomBtn()">新增按钮</button><button class="panel-btn" onclick="SuperPanel.showBottomBar()">显示</button><button class="panel-btn" onclick="SuperPanel.hideBottomBar()">隐藏</button></div><div id="bottomBtnsList" style="margin-top:15px;"></div></div>
+                <div class="panel-group"><h3>悬浮按钮组</h3><div class="btn-group"><button class="panel-btn" onclick="SuperPanel.showFabGroup()">显示</button><button class="panel-btn" onclick="SuperPanel.hideFabGroup()">隐藏</button></div></div>
+                <div class="panel-group"><h3>QQ群入口</h3><div class="btn-group"><button class="panel-btn" onclick="SuperPanel.showQQBtn()">显示</button><button class="panel-btn" onclick="SuperPanel.hideQQBtn()">隐藏</button></div></div>
+                <div class="panel-group"><h3>其他</h3><div class="btn-group"><button class="panel-btn" onclick="SuperPanel.forceRefreshBg()">强制刷新壁纸</button></div></div>
+                <button class="panel-btn panel-success" onclick="SuperPanel.refreshBtnsList()">刷新按钮列表</button>
+            </div>
+            <div class="panel-page" data-page="5">
+                <div class="panel-group"><h3>关键词回复库</h3><div id="repoList"></div><button class="panel-btn" onclick="SuperPanel.addRepoItem()" style="margin-top:10px;">新增回复规则</button></div>
+                <div class="panel-group"><h3>快捷命令</h3><div class="panel-item"><label>激活命令1</label><input class="panel-input" id="p_superCmd1"></div><div class="panel-item"><label>激活命令2</label><input class="panel-input" id="p_superCmd2"></div><div class="panel-item"><label>激活成功回复</label><input class="panel-input" id="p_superReply"></div></div>
+                <button class="panel-btn panel-success" onclick="SuperPanel.applyChatConfig()">应用聊天配置</button>
+            </div>
+            <div class="panel-page" data-page="6">
+                <div class="panel-group"><h3>动画开关</h3><div class="panel-item-row"><label>标题浮动</label><input type="checkbox" id="p_titleFloat" checked></div><div class="panel-item-row"><label>诗词浮动</label><input type="checkbox" id="p_quoteFloat" checked></div><div class="panel-item-row"><label>按钮缩放</label><input type="checkbox" id="p_btnScale" checked></div></div>
+                <div class="panel-group"><h3>动画参数</h3><div class="panel-item"><label>打字速度 <span id="p_typeSpeed_val">60</span>ms</label><input type="range" id="p_typeSpeed" min="20" max="150"></div><div class="panel-item"><label>过渡时间 <span id="p_transition_val">0.6</span>s</label><input type="range" id="p_transition" min="0.2" max="1.5" step="0.1"></div><div class="panel-item"><label>遮罩时间 <span id="p_maskTime_val">0.3</span>s</label><input type="range" id="p_maskTime" min="0.1" max="1" step="0.1"></div><div class="panel-item"><label>壁纸切换 <span id="p_bgSwitch_val">2.5</span>s</label><input type="range" id="p_bgSwitch" min="1" max="5" step="0.5"></div></div>
+                <button class="panel-btn panel-success" onclick="SuperPanel.applyAnimation()">应用动画</button>
+            </div>
+            <div class="panel-page" data-page="7">
+                <div class="panel-group"><h3>所有CSS变量</h3><div id="cssVarList" class="css-var-grid"></div></div>
+                <div class="panel-group"><h3>批量操作</h3><div class="btn-group"><button class="panel-btn" onclick="SuperPanel.refreshCssVars()">刷新变量列表</button><button class="panel-btn panel-success" onclick="SuperPanel.applyAllCssVars()">应用所有变量</button><button class="panel-btn panel-warning" onclick="SuperPanel.exportCssVars()">导出CSS变量</button></div></div>
+            </div>
+            <div class="panel-page" data-page="8">
+                <div class="panel-group"><h3>拖拽模式</h3><div class="panel-item"><label>说明：开启后关闭面板，可拖拽任何元素调整位置和大小，按ESC退出</label></div></div>
+                <div class="panel-group"><h3>可拖拽元素</h3><div id="draggableList" style="font-size:12px;"></div></div>
+                <div class="panel-group">
+                    <h3>控制</h3>
+                    <div class="btn-group">
+                        <button class="panel-btn panel-warning" onclick="DragMode.enable()">开启拖拽模式</button>
+                        <button class="panel-btn panel-danger" onclick="DragMode.disable()">关闭拖拽模式</button>
+                        <button class="panel-btn" onclick="DragMode.resetPositions()">重置所有位置</button>
+                    </div>
+                    <div class="panel-item-row" style="margin-top:15px;">
+                        <label>📏 对齐辅助线</label>
+                        <input type="checkbox" id="p_snapGuide" checked onchange="DragMode.toggleSnap(this.checked)">
+                    </div>
+                </div>
+                <div class="panel-group">
+                    <h3>新建元素</h3>
+                    <div class="btn-group">
+                        <button class="panel-btn panel-success" onclick="DragMode.createButton()">➕ 新建按钮</button>
+                        <button class="panel-btn" onclick="DragMode.createText()">📝 新建文本</button>
+                        <button class="panel-btn panel-warning" onclick="DragMode.createLink()">🔗 新建链接</button>
+                    </div>
+                    <p style="font-size:11px; opacity:0.6; margin-top:10px;">新建后自动开启拖拽模式，长按元素可编辑文字/链接</p>
+                </div>
+                <div class="panel-group">
+                    <h3>保存的位置数据</h3>
+                    <textarea class="panel-textarea" id="positionData" readonly style="font-family:monospace; font-size:11px;"></textarea>
+                    <div class="btn-group" style="margin-top:10px;">
+                        <button class="panel-btn" onclick="DragMode.exportPositions()">导出位置</button>
+                        <button class="panel-btn" onclick="DragMode.importPositions()">导入位置</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-page" data-page="9">
+                <div class="panel-group"><h3>配置备份</h3><div class="btn-group"><button class="panel-btn panel-success" onclick="SuperPanel.exportConfig()">导出配置</button><button class="panel-btn" onclick="SuperPanel.importConfig()">导入配置</button><input type="file" id="configImport" accept=".json"></div></div>
+                <div class="panel-group"><h3>重置选项</h3><div class="btn-group"><button class="panel-btn" onclick="SuperPanel.resetToDefault()">重置默认</button><button class="panel-btn" onclick="SuperPanel.resetStyleOnly()">仅重置样式</button><button class="panel-btn" onclick="SuperPanel.resetTextOnly()">仅重置文字</button></div></div>
+                <div class="panel-group"><h3>危险操作</h3><div class="btn-group"><button class="panel-btn panel-danger" onclick="SuperPanel.clearAllCache()">清空缓存</button><button class="panel-btn panel-danger" onclick="SuperPanel.hardReload()">强制重载</button><button class="panel-btn panel-danger" onclick="SuperPanel.toggleSuperMode()">关闭超级模式</button><button class="panel-btn panel-danger" onclick="SuperPanel.stripStyles()">清除所有样式</button></div></div>
+                <div class="panel-group"><h3>壁纸锁定</h3><div class="btn-group"><button class="panel-btn panel-success" onclick="UI.saveWallpaperSnapshot()">锁定当前壁纸</button><button class="panel-btn panel-warning" onclick="UI.clearLockedWallpaper()">解除锁定</button></div><div style="font-size:12px; opacity:0.6; margin-top:10px;">锁定后刷新页面壁纸不再变化</div></div>
+                <div class="panel-group"><h3>系统信息</h3><div style="font-size:12px; opacity:0.7;"><div>版本 v202604001</div><div>存储使用 <span id="storageUsage">计算中</span></div></div></div>
+            </div>
+            <div class="panel-page" data-page="10">
+                <div class="panel-group"><h3>AI性格设定</h3><div class="panel-item"><label>自定义小柚子的性格</label><textarea class="panel-textarea" id="p_aiSystemPrompt" placeholder="你是小柚子，一个傲娇的助手..."></textarea></div><div class="btn-group"><button class="panel-btn panel-success" onclick="SuperPanel.applyAIPersonality()">应用性格</button><button class="panel-btn" onclick="SuperPanel.resetAIPersonality()">重置默认</button></div><div style="font-size:12px;opacity:0.6;margin-top:10px;">修改后立即生效，小柚子会变成你设定的样子</div></div>
+                <div class="panel-group"><h3>小柚子的灵魂</h3><div class="btn-group"><button class="panel-btn panel-success" onclick="AIChat.enable()">唤醒 ai 小柚子</button><button class="panel-btn panel-warning" onclick="AIChat.disable()">让小柚子沉睡</button></div><div style="font-size:12px; opacity:0.6; margin-top:10px;">唤醒后，小柚子将拥有真正的灵魂（消耗API）</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 主界面 -->
+<div class="title-wrap" id="mainTitleWrap">
+    <h1 class="main-title draggable" id="mainTitle">轻·简</h1>
+    <span class="sub-title-tag draggable" id="subTitleTag">轻·简 次元</span>
+    <div class="quote-box draggable">
+        <div id="quoteDisplay" class="dynamic-btn float-anim" onclick="UI.handleQuoteClick()">...</div>
+    </div>
+</div>
+
+<!-- 底部按钮：* -->
+<nav class="bottom-bar" id="bottomBar">
+    <div class="btn-pay btn-glass dynamic-btn draggable" onclick="Morph.open('shop', this)">
+        <span>获取主题</span>
+        <span class="gold-price">🛒</span>
+    </div>
+    <div class="qqgroup-btn btn-glass dynamic-btn draggable" id="qqGroupBtn" onclick="Morph.open('pay', this, CONFIG.qqUrl)">
+    <img id="qqIconImg" src="https://s41.ax1x.com/2026/04/16/pesiTOJ.png" style="width:38px;height:38px;object-fit:contain">
+    <span id="qqBtnText" style="font-weight:700;font-size:15px;color:#333">加入讨论！</span>
+</div>
+</nav>
+
+<div class="fab-group" id="fabGroup">
+    <div class="refresh-btn fab btn-glass dynamic-btn" id="refreshBtn" onclick="UI.refreshBg()">
+        <span class="icon-spin">↻</span>
+    </div>
+    <div class="help-btn fab btn-glass dynamic-btn" id="helpBtn" onclick="Morph.open('chat', this)">💬</div>
+<div class="game-btn fab btn-glass dynamic-btn" id="gameBtn" onclick="Morph.open('game', this, 'https://game.share888.top/yxmb/6/index.html')">🎮</div>
+</div>
+<div class="version-info draggable" id="versionInfo">· VERSION 202604001 ·</div>
+
+<div id="mainMask" class="mask" onclick="if(event.target.id==='mainMask') Morph.close()">
+    <section class="float-controls" id="floatControls">
+        <div class="float-btn dynamic-btn" onclick="Morph.toggleFull()">⛶</div>
+        <div class="float-btn dynamic-btn" onclick="Morph.close()" style="color:#0F0F0F">✕</div>
+    </section>
+    <article id="mainWindow" class="window">
+        <div id="windowVeil" class="window-veil"></div>
+        <iframe id="mainIframe" style="width:100%;height:100%;border:0;display:none;"></iframe>
+        
+        <!-- 聊天界面 -->
+        <div id="qqChatPage" class="qq-chat-wrap" style="display:none;">
+            <nav class="qq-nav">
+                <div>
+                    <div style="font-weight:800;font-size:17px;" id="botNameDisplay">小柚子（助手）</div>
+                    <div id="botStatus" style="font-size:12px;color:#2ecc71">● 在线中</div>
+                </div>
+            </nav>
+            <div class="chat-body" id="chatBody"></div>
+            <div class="qq-input-bar">
+                <input type="text" class="input-real" id="chatInput" placeholder="说点什么吧...">
+                <div style="color:var(--qq-blue);font-weight:700;cursor:pointer;" onclick="ChatEngine.userSend()">发送</div>
+            </div>
+        </div>
+       <!-- 游戏页面 (专门用于内嵌 iframe) -->
+       <div id="gamePage" style="display:none; height:100%; width:100%; background:transparent;">
+         <iframe id="gameIframe" style="width:100%; height:100%; border:0;" src="" allowfullscreen></iframe>
+       </div>
+        
+        <!-- 商店卡片页面 -->
+        <div id="shopPage" style="display:none;">
+            <div class="panel-title" style="margin-bottom:16px;">✨ 获取主题</div>
+            <div class="panel-group">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                    <div>
+                        <h3 style="font-size:18px; font-weight:700;">精美主题包</h3>
+                        <p style="opacity:0.6; font-size:13px;">完整版 · 一劳永逸</p>
+                    </div>
+                    <span class="gold-price" style="font-size:24px;">¥5.5</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:16px 0;">
+                    <span>✓ 锁屏美化</span><span>✓ 猫耳电池</span>
+                    <span>✓ 全套图标</span><span>✓ 状态栏优化</span>
+                </div>
+                <button class="panel-btn panel-success" style="width:100%;" onclick="ShopPage.buy(1, this)">立即购买</button>
+            </div>
+            <div class="panel-group">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                    <div>
+                        <h3 style="font-size:18px; font-weight:700;">全套图标包</h3>
+                        <p style="opacity:0.6; font-size:13px;">轻量版 · 仅图标壁纸</p>
+                    </div>
+                    <span class="gold-price" style="font-size:24px;">¥3.5</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:16px 0;">
+                    <span>✓ 全套图标</span><span>✓ 精选壁纸</span>
+                </div>
+                <button class="panel-btn" style="width:100%;" onclick="ShopPage.buy(2, this)">立即购买</button>
+            </div>
+            <p style="text-align:center; opacity:0.5; font-size:12px; margin-top:16px; color:#000;">💡 购买后复制链接前往下载即可</p>
+        </div>
+    </article>
+</div>
+
+<script>
+const DragMode={enabled:!1,target:null,type:'',x:0,y:0,w:0,h:0,l:0,t:0,snapEnabled:!0,snapThreshold:10,guideLines:[],enable(){document.body.classList.add('drag-mode-active');this.enabled=!0;SuperPanel.close();document.querySelectorAll('.draggable').forEach(el=>{el.style.zIndex='100';if(!el.closest('.title-wrap')){el.style.position=getComputedStyle(el).position==='static'?'relative':el.style.position;}if(!el.querySelector('.resize-handle')){const handle=document.createElement('div');handle.className='resize-handle';el.appendChild(handle);}});},disable(){document.body.classList.remove('drag-mode-active');this.enabled=!1;this.target=null;document.querySelectorAll('.resize-handle').forEach(h=>h.remove());document.querySelectorAll('.draggable').forEach(el=>{el.style.zIndex='';el.style.position='';});},toggleSnap(e){this.snapEnabled=e;localStorage.setItem('SNAP_ENABLED',e);},showGuideLine(o,p){let l=document.getElementById(`guide-${o}-${p}`);if(!l){l=document.createElement('div');l.id=`guide-${o}-${p}`;l.style.position='fixed';l.style.backgroundColor='#12B7F5';l.style.boxShadow='0 0 8px #12B7F5';l.style.zIndex='99998';l.style.pointerEvents='none';document.body.appendChild(l);}if(o==='vertical'){l.style.width='1px';l.style.height='100vh';l.style.left=p+'px';l.style.top='0';}else{l.style.width='100vw';l.style.height='1px';l.style.left='0';l.style.top=p+'px';}l.style.display='block';this.guideLines.push(l);},hideGuideLines(){this.guideLines.forEach(l=>l.style.display='none');this.guideLines=[];},calcSnap(r,a){if(!this.snapEnabled)return{x:r.left,y:r.top};let x=r.left,y=r.top;const t=this.snapThreshold;this.hideGuideLines();if(Math.abs(r.left)<t){x=0;this.showGuideLine('vertical',0);}else if(Math.abs(r.right-window.innerWidth)<t){x=window.innerWidth-r.width;this.showGuideLine('vertical',window.innerWidth);}if(Math.abs(r.top)<t){y=0;this.showGuideLine('horizontal',0);}else if(Math.abs(r.bottom-window.innerHeight)<t){y=window.innerHeight-r.height;this.showGuideLine('horizontal',window.innerHeight);}a.forEach(o=>{if(o.id===r.id)return;if(Math.abs(r.left-o.left)<t){x=o.left;this.showGuideLine('vertical',o.left);}if(Math.abs(r.right-o.right)<t){x=o.right-r.width;this.showGuideLine('vertical',o.right);}if(Math.abs(r.left+r.width/2-(o.left+o.width/2))<t){x=o.left+o.width/2-r.width/2;this.showGuideLine('vertical',o.left+o.width/2);}if(Math.abs(r.top-o.top)<t){y=o.top;this.showGuideLine('horizontal',o.top);}if(Math.abs(r.bottom-o.bottom)<t){y=o.bottom-r.height;this.showGuideLine('horizontal',o.bottom);}if(Math.abs(r.top+r.height/2-(o.top+o.height/2))<t){y=o.top+o.height/2-r.height/2;this.showGuideLine('horizontal',o.top+o.height/2);}});return{x,y};},resetPositions(){if(confirm('重置所有元素位置？')){localStorage.removeItem('DRAG_POSITIONS');location.reload();}},exportPositions(){const p={};document.querySelectorAll('.draggable').forEach((e,i)=>{const id=e.id||`el-${i}`;const r=e.getBoundingClientRect();p[id]={left:e.style.left||r.left+'px',top:e.style.top||r.top+'px',width:e.style.width||r.width+'px',height:e.style.height||r.height+'px'};});const d=JSON.stringify(p,null,2);const b=new Blob([d],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`positions_${Date.now()}.json`;a.click();URL.revokeObjectURL(u);},importPositions(){const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const p=JSON.parse(ev.target.result);document.querySelectorAll('.draggable').forEach((e,i)=>{const id=e.id||`el-${i}`;if(p[id]){e.style.left=p[id].left;e.style.top=p[id].top;e.style.width=p[id].width;e.style.height=p[id].height;e.style.position='fixed';}});localStorage.setItem('DRAG_POSITIONS',JSON.stringify(p));}catch(err){alert('格式错误');}};r.readAsText(f);};i.click();},createButton(){const b=document.createElement('div');b.className='btn-pay btn-glass dynamic-btn draggable';b.innerHTML='<span>新按钮</span>';b.style.position='fixed';b.style.left='50%';b.style.top='50%';b.style.transform='translate(-50%,-50%)';b.style.zIndex='100';b.style.cursor='move';b.style.minWidth='120px';b.setAttribute('data-editable','true');document.body.appendChild(b);this.enable();this.showTip('按钮已创建，长按可编辑文字');},createText(){const t=document.createElement('div');t.className='draggable';t.innerHTML='新文本';t.style.position='fixed';t.style.left='50%';t.style.top='50%';t.style.transform='translate(-50%,-50%)';t.style.color='#fff';t.style.fontSize='16px';t.style.fontWeight='700';t.style.textShadow='0 2px 10px rgba(0,0,0,0.3)';t.style.zIndex='100';t.style.cursor='move';t.setAttribute('data-editable','true');document.body.appendChild(t);this.enable();this.showTip('文本已创建，长按可编辑');},createLink(){const l=document.createElement('div');l.className='btn-pay btn-glass dynamic-btn draggable';l.innerHTML='<span>🔗 新链接</span>';l.style.position='fixed';l.style.left='50%';l.style.top='50%';l.style.transform='translate(-50%,-50%)';l.style.zIndex='100';l.style.cursor='move';l.style.minWidth='120px';l.setAttribute('data-editable','true');l.setAttribute('data-link','https://');l.setAttribute('data-type','link');l.addEventListener('click',e=>{if(DragMode.enabled)return;const u=l.getAttribute('data-link');if(u&&u!=='https://')Morph.open('pay',l,u);else alert('请先长按设置链接地址');});document.body.appendChild(l);this.enable();this.showTip('链接已创建，长按可编辑文字和地址');},showTip(m){const t=document.createElement('div');t.style.position='fixed';t.style.bottom='100px';t.style.left='50%';t.style.transform='translateX(-50%)';t.style.background='var(--glass-bg)';t.style.backdropFilter='var(--glass-blur)';t.style.padding='10px 20px';t.style.borderRadius='30px';t.style.color='#fff';t.style.fontSize='14px';t.style.zIndex='99999';t.style.whiteSpace='nowrap';t.style.boxShadow='var(--shadow)';t.innerText=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000);},initLongPress(){let t;const h=e=>{const el=e.target.closest('[data-editable]');if(!el||!DragMode.enabled)return;const isLink=el.getAttribute('data-type')==='link';const curText=el.innerText;if(isLink){const curUrl=el.getAttribute('data-link')||'https://';const nt=prompt('编辑按钮文字',curText);if(nt!==null&&nt.trim()!=='')el.innerText=nt;const nu=prompt('编辑链接地址',curUrl);if(nu!==null&&nu.trim()!=='')el.setAttribute('data-link',nu);}else{const nt=prompt('编辑文字',curText);if(nt!==null&&nt.trim()!=='')el.innerText=nt;}};document.addEventListener('touchstart',e=>{const el=e.target.closest('[data-editable]');if(!el||!DragMode.enabled)return;t=setTimeout(()=>h(e),500);});document.addEventListener('touchend',()=>clearTimeout(t));document.addEventListener('touchmove',()=>clearTimeout(t));document.addEventListener('mousedown',e=>{const el=e.target.closest('[data-editable]');if(!el||!DragMode.enabled)return;t=setTimeout(()=>h(e),500);});document.addEventListener('mouseup',()=>clearTimeout(t));document.addEventListener('mousemove',()=>clearTimeout(t));},init(){const s=localStorage.getItem('SNAP_ENABLED');if(s!==null){this.snapEnabled=s==='true';const cb=document.getElementById('p_snapGuide');if(cb)cb.checked=this.snapEnabled;}}};
+document.addEventListener('mousedown',dragStart);
+document.addEventListener('touchstart',dragStart,{passive:!1});
+document.addEventListener('mousemove',dragMove);
+document.addEventListener('touchmove',dragMove,{passive:!1});
+document.addEventListener('mouseup',dragEnd);
+document.addEventListener('touchend',dragEnd);
+document.addEventListener('keydown',e=>{e.key==='Escape'&&DragMode.disable()});
+function dragStart(e){if(!DragMode.enabled)return;const d=e.target;if(d.classList.contains('resize-handle')){DragMode.target=d.parentElement;DragMode.type='resize';}else{DragMode.target=d.closest('.draggable');DragMode.type='drag';}if(!DragMode.target)return;DragMode.target.style.zIndex='99999';const p=e.type.includes('mouse')?e:e.touches[0];DragMode.x=p.clientX;DragMode.y=p.clientY;DragMode.l=DragMode.target.getBoundingClientRect().left;DragMode.t=DragMode.target.getBoundingClientRect().top;DragMode.w=DragMode.target.offsetWidth;DragMode.h=DragMode.target.offsetHeight;DragMode.target.style.position='fixed';DragMode.target.style.transition='none';e.preventDefault();e.stopPropagation();}
+function dragMove(e){if(!DragMode.target)return;const p=e.type.includes('mouse')?e:e.touches[0];const dx=p.clientX-DragMode.x,dy=p.clientY-DragMode.y;if(DragMode.type==='drag'){let newLeft=DragMode.l+dx,newTop=DragMode.t+dy;const allRects=[];document.querySelectorAll('.draggable').forEach(el=>{if(el===DragMode.target)return;const rect=el.getBoundingClientRect();rect.id=el.id||el.className;allRects.push(rect);});const curRect={left:newLeft,top:newTop,right:newLeft+DragMode.w,bottom:newTop+DragMode.h,width:DragMode.w,height:DragMode.h,id:'current'};const snap=DragMode.calcSnap(curRect,allRects);DragMode.target.style.left=snap.x+'px';DragMode.target.style.top=snap.y+'px';}else{DragMode.target.style.width=Math.max(60,DragMode.w+dx)+'px';DragMode.target.style.height=Math.max(40,DragMode.h+dy)+'px';}e.preventDefault();e.stopPropagation();}
+function dragEnd(){if(DragMode.target){DragMode.target.style.transition='';DragMode.target.style.zIndex='100';const positions=JSON.parse(localStorage.getItem('DRAG_POSITIONS')||'{}');const el=DragMode.target;const id=el.id||el.className.split(' ')[0];positions[id]={left:el.style.left,top:el.style.top,width:el.style.width,height:el.style.height};localStorage.setItem('DRAG_POSITIONS',JSON.stringify(positions));}DragMode.hideGuideLines();DragMode.target=null;DragMode.type='';}
+
+const CONFIG_URL = 'https://raw.githubusercontent.com/yugan12345-gilch/002/refs/heads/main/%E5%AF%86%E7%A0%81';
+const DEFAULT_CONFIG = {
+    themeColor: '#12B7F5', bgColor: '#000000', bubbleColor: '#12B7F5',
+    glassOpacity: 0.28, blurAmount: 30, saturateAmount: 210, borderWidth: 1, shadowStrength: 0.18,
+    titleGlow: '0 0 20px rgba(255,255,255,0.55)', titleBlur: 0.4, titleWeight: 800, titleSpacing: -3,
+    titleBrightness: 1.5, titleContrast: 1.2,
+    mainTitle: '轻·简', subTitle: '轻·简 次元', versionText: '· VERSION 202604001 ·', quotePlaceholder: '...',
+    btn1Text: '获取主题', btn1Price: '🛒', btn2Text: '', btn2Price: '', qqBtnText: '加入讨论！',
+    botName: '小柚子（助手）', botOnline: '● 在线中', botOffline: '● 离线中', botTyping: '● 对方正在输入...', 
+    welcomeMsg: 'Ciallo～(∠・ω< )⌒★', noMatchMsg: '（自动回复）小柚子睡着了💤，似乎有什么办法可以叫醒她～',
+    subtitleBg: 'rgba(0,0,0,0.3)', subtitleColor: '#ffffff', quoteColor: '#000000', btnColor: '#000000', versionColor: '#000000',
+    titleSize: 64, subSize: 14, quoteSize: 16, btnFontSize: 16, btnRadius: 28, windowRadius: 48, bubbleRadius: 20,
+    fabSize: 40, bottomSpace: 60, titleMargin: 70, btnPadding: '22px 10px', btnWeight: 700,
+    avatarSize: 42, navHeight: 75, inputHeight: 45, fabIconSize: 24,
+    bgApi: 'https://api.yppp.net/api.php', quoteApi: 'https://v1.hitokoto.cn/?c=i',
+    botAvatar: 'https://q1.qlogo.cn/g?b=qq&nk=1449354373&s=640', userAvatar: 'https://q1.qlogo.cn/g?b=qq&nk=3891541995&s=640', 
+    qqIcon: 'https://s41.ax1x.com/2026/04/16/pesiTOJ.png',
+    btn1Url: '', btn2Url: '', qqUrl: 'https://qm.qq.com/q/fuuGUgAbHa', 
+    titleFloat: true, quoteFloat: true, btnScale: true, typeSpeed: 60, transitionTime: 0.6, maskTransitionTime: 0.3, bgSwitchTime: 2.5,
+    superReply: '…哼，蒜你厉害，可别搞坏了哦～',
+    chatRepo: [
+        {key:['订单','没收到','付款'],ans:'（自动回复）请前往“获取主题”看看，点击订单查询找回。'},
+        {key:['群','交流','官方'],ans:'（自动回复）请点击主页下方直接跳转官方群聊。'}
+    ]
+};
+
+let CONFIG = JSON.parse(localStorage.getItem('FULL_CONFIG')) || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+if (!CONFIG.chatRepo) { const old = JSON.parse(localStorage.getItem('SYS_CONFIG')) || {}; CONFIG = { ...DEFAULT_CONFIG, ...old }; }
+
+async function syncCloudConfig() {
+    if (!navigator.onLine) return;
+    try {
+        const response = await fetch(CONFIG_URL);
+        if (!response.ok) return;
+        const cloudConfig = await response.json();
+        Object.assign(CONFIG, cloudConfig);
+        saveConfig();
+        applyAllConfig();
+    } catch (error) {}
+}
+function saveConfig() {
+    localStorage.setItem('FULL_CONFIG', JSON.stringify(CONFIG));
+    localStorage.setItem('SYS_CONFIG', JSON.stringify({ bgApi: CONFIG.bgApi, quoteApi: CONFIG.quoteApi, qqAvatar: CONFIG.botAvatar, userAvatar: CONFIG.userAvatar }));
+}
+
+function applyAllConfig() {
+    const root = document.documentElement, style = root.style;
+    style.setProperty('--qq-blue', CONFIG.themeColor); 
+    style.setProperty('--body-bg', CONFIG.bgColor);
+    style.setProperty('--glass-bg', `rgba(255, 255, 255, ${CONFIG.glassOpacity})`);
+    style.setProperty('--glass-blur', `blur(${CONFIG.blurAmount}px) saturate(${CONFIG.saturateAmount}%)`);
+    style.setProperty('--border-width', CONFIG.borderWidth + 'px');
+    style.setProperty('--shadow', `0 15px 35px rgba(0, 0, 0, ${CONFIG.shadowStrength})`);
+    style.setProperty('--title-size', CONFIG.titleSize + 'px');
+    style.setProperty('--subtitle-size', CONFIG.subSize + 'px');
+    style.setProperty('--btn-radius', CONFIG.btnRadius + 'px');
+    style.setProperty('--window-radius', CONFIG.windowRadius + 'px');
+    style.setProperty('--fab-size', CONFIG.fabSize + 'px');
+    style.setProperty('--bottom-space', CONFIG.bottomSpace + 'px');
+    style.setProperty('--btn-padding', CONFIG.btnPadding);
+    style.setProperty('--title-glow', CONFIG.titleGlow);
+    style.setProperty('--title-blur', CONFIG.titleBlur + 'px');
+    style.setProperty('--title-weight', CONFIG.titleWeight);
+    style.setProperty('--title-spacing', CONFIG.titleSpacing + 'px');
+    style.setProperty('--title-brightness', CONFIG.titleBrightness);
+    style.setProperty('--title-contrast', CONFIG.titleContrast);
+    style.setProperty('--subtitle-bg', CONFIG.subtitleBg);
+    style.setProperty('--subtitle-color', CONFIG.subtitleColor);
+    style.setProperty('--quote-color', CONFIG.quoteColor);
+    style.setProperty('--quote-size', CONFIG.quoteSize + 'px');
+    style.setProperty('--btn-color', CONFIG.btnColor);
+    style.setProperty('--btn-weight', CONFIG.btnWeight);
+    style.setProperty('--version-color', CONFIG.versionColor);
+    style.setProperty('--bubble-radius', CONFIG.bubbleRadius + 'px');
+    style.setProperty('--avatar-size', CONFIG.avatarSize + 'px');
+    style.setProperty('--nav-height', CONFIG.navHeight + 'px');
+    style.setProperty('--input-height', CONFIG.inputHeight + 'px');
+    style.setProperty('--fab-icon-size', CONFIG.fabIconSize + 'px');
+    style.setProperty('--bubble-color', CONFIG.bubbleColor);
+    style.setProperty('--transition-time', CONFIG.transitionTime + 's');
+    style.setProperty('--mask-transition-time', CONFIG.maskTransitionTime + 's');
+    
+    document.getElementById('mainTitle').innerText = CONFIG.mainTitle;
+    document.getElementById('subTitleTag').innerText = CONFIG.subTitle;
+    document.getElementById('versionInfo').innerText = CONFIG.versionText;
+    document.getElementById('qqBtnText').innerText = CONFIG.qqBtnText;
+    document.getElementById('botNameDisplay').innerText = CONFIG.botName;
+    document.querySelectorAll('.btn-pay').forEach(b => b.style.fontSize = CONFIG.btnFontSize + 'px');
+    document.querySelector('.title-wrap').style.marginBottom = CONFIG.titleMargin + 'px';
+    document.getElementById('mainTitle').style.animation = CONFIG.titleFloat ? 'liquidFloat 6s ease-in-out infinite alternate' : 'none';
+    document.getElementById('quoteDisplay').classList.toggle('float-anim', CONFIG.quoteFloat);
+    
+    const bubbleColor = CONFIG.bubbleColor || '#12B7F5';
+    const r = parseInt(bubbleColor.slice(1,3), 16);
+    const g = parseInt(bubbleColor.slice(3,5), 16);
+    const b = parseInt(bubbleColor.slice(5,7), 16);
+    let styleEl = document.getElementById('dynamic-bubble-style');
+    if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'dynamic-bubble-style';
+        document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = `
+        .msg-right .bubble {
+            background: rgba(${r}, ${g}, ${b}, 0.9) !important;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 0.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--bubble-radius);
+            border-bottom-right-radius: 5px;
+            color: #fff;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 4px 12px rgba(0,0,0,0.1);
+        }
+    `;
+    
+    window.CONFIG = CONFIG;
+}
+
+const UI = {
+    typingTimer: null, isRefreshing: false, lastQuoteTime: 0, isTyping: false,
+    init() {
+        if (!navigator.onLine) {
+            document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#fff;font-family:-apple-system,sans-serif;flex-direction:column;gap:20px;text-align:center;padding:20px;"><div style="font-size:56px;opacity:0.8;">😋</div><div style="font-size:18px;font-weight:500;opacity:0.8;">网络断开了捏～</div><div style="font-size:14px;opacity:0.4;">wifi欠费还是飞行模式没关？</div><button onclick="location.reload()" style="margin-top:20px;padding:12px 32px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:30px;color:#fff;font-size:14px;cursor:pointer;">重新加载</button></div>`;
+            return;
+        }
+        const bgEl = document.getElementById('bg-primary');
+        const lockedWallpaper = localStorage.getItem('LOCKED_WALLPAPER');
+        if (lockedWallpaper) {
+            bgEl.style.backgroundImage = `url(${lockedWallpaper})`;
+            bgEl.style.backgroundSize = 'cover';
+            bgEl.style.backgroundPosition = 'center';
+            this.loadQuote();
+            applyAllConfig();
+            return;
+        }
+        const lastBg = localStorage.getItem('LAST_BG');
+        if (lastBg && !localStorage.getItem('LOCAL_BG') && !localStorage.getItem('LOCKED_WALLPAPER')) {
+          bgEl.style.backgroundImage = `url(${lastBg})`;
+          bgEl.style.backgroundSize = 'cover';
+          bgEl.style.backgroundPosition = 'center';
+        }
+        const cachedLocalBg = localStorage.getItem('LOCAL_BG');
+        if (cachedLocalBg) {
+            CONFIG.bgApi = cachedLocalBg;
+            bgEl.style.backgroundImage = `url(${cachedLocalBg})`;
+            bgEl.style.backgroundSize = 'cover';
+            bgEl.style.backgroundPosition = 'center';
+        } else {
+            bgEl.style.background = '#000';
+            bgEl.style.backgroundSize = 'cover';
+            bgEl.style.backgroundPosition = 'center';
+        }
+       if (CONFIG.bgApi && !CONFIG.bgApi.startsWith('data:') && !CONFIG.bgApi.startsWith('blob:')) {
+          const img = new Image();
+           img.src = CONFIG.bgApi;
+           img.onload = () => { 
+             bgEl.style.backgroundImage = `url(${img.src})`; 
+              localStorage.setItem('LAST_BG', img.src);
+       };
+    }
+        this.loadQuote();
+        applyAllConfig();
+        
+        const QQ_TEXTS = ['加入讨论！', '一起van♂', '群里好多大佬', '来玩嘛大爷～', '来群里摸鱼', '暗中观察', 'kira～☆', '群友召唤术', '戳我进群'];
+        const randomIndex = Math.floor(Math.random() * QQ_TEXTS.length);
+        document.getElementById('qqBtnText').innerText = QQ_TEXTS[randomIndex];
+        document.getElementById('qqGroupBtn').addEventListener('click', function() {
+            const el = document.getElementById('qqBtnText');
+            const current = el.innerText;
+            let newText = QQ_TEXTS[Math.floor(Math.random() * QQ_TEXTS.length)];
+            while (newText === current && QQ_TEXTS.length > 1) {
+                newText = QQ_TEXTS[Math.floor(Math.random() * QQ_TEXTS.length)];
+            }
+            el.innerText = newText;
+        });
+        
+        const savedPositions=localStorage.getItem('DRAG_POSITIONS');
+        if(savedPositions){try{const positions=JSON.parse(savedPositions);document.querySelectorAll('.draggable').forEach((el,i)=>{const id=el.id||el.className.split(' ')[0];if(positions[id]){el.style.position='fixed';if(positions[id].left)el.style.left=positions[id].left;if(positions[id].top)el.style.top=positions[id].top;if(positions[id].width)el.style.width=positions[id].width;if(positions[id].height)el.style.height=positions[id].height;}});}catch(e){}}
+        syncCloudConfig();
+    },
+    handleQuoteClick() {
+        let now = Date.now(), el = document.getElementById('quoteDisplay');
+        if (now - this.lastQuoteTime < 3000 || this.isTyping) { el.classList.add('shake-anim'); setTimeout(() => el.classList.remove('shake-anim'), 400); return; }
+        this.lastQuoteTime = now; this.loadQuote();
+    },
+    typeWriter(t) {
+        let el = document.getElementById('quoteDisplay'); el.innerHTML = ''; let i = 0; this.isTyping = true; clearInterval(this.typingTimer);
+        this.typingTimer = setInterval(() => {
+            if (i < t.length) { let cur = el.innerHTML.replace('<span class="cursor"></span>', ''); el.innerHTML = cur + t.charAt(i) + '<span class="cursor"></span>'; i++; }
+            else { clearInterval(this.typingTimer); this.isTyping = false; setTimeout(() => el.innerHTML = t, 3000); }
+        }, CONFIG.typeSpeed);
+    },
+    loadQuote() {
+        const el = document.getElementById('quoteDisplay');
+        fetch(CONFIG.quoteApi).then(r => r.json()).then(d => { this.typeWriter(d.hitokoto + ' —— ' + (d.from_who || d.from)); }).catch(() => { el.innerText = CONFIG.quotePlaceholder; this.typeWriter('轻而不淡，简而有致。'); });
+    },
+    refreshBg() {
+        if (this.isRefreshing) return;
+        if (!CONFIG.bgApi || CONFIG.bgApi === '') return;
+        if (CONFIG.bgApi.startsWith('blob:') || CONFIG.bgApi.startsWith('data:')) return;
+        this.isRefreshing = true;
+        let btn = document.getElementById('refreshBtn'), p = document.getElementById('bg-primary'), s = document.getElementById('bg-secondary');
+        btn.classList.add('refreshing');
+        let u = CONFIG.bgApi + '?t=' + Date.now(); let img = new Image(); img.src = u;
+        img.onload = () => { s.style.backgroundImage = `url(${u})`; s.style.opacity = 1; s.style.transition = `opacity ${CONFIG.bgSwitchTime}s ease-in-out`;
+            setTimeout(() => { p.style.backgroundImage = `url(${u})`; s.style.opacity = 0; btn.classList.remove('refreshing'); this.isRefreshing = false; }, CONFIG.bgSwitchTime * 1000); };
+        img.onerror = () => { btn.classList.remove('refreshing'); this.isRefreshing = false; };
+    },
+    saveWallpaperSnapshot() {
+        const bgEl = document.getElementById('bg-primary');
+        const bgImage = getComputedStyle(bgEl).backgroundImage;
+        const urlMatch = bgImage.match(/url\(["']?([^"']*)["']?\)/);
+        if (!urlMatch) return;
+        const imgUrl = urlMatch[1];
+        if (imgUrl.startsWith('data:')) {
+            localStorage.setItem('LOCKED_WALLPAPER', imgUrl);
+            alert('壁纸已锁定');
+            return;
+        }
+        fetch(imgUrl).then(res => res.blob()).then(blob => {
+            const reader = new FileReader();
+            reader.onload = () => { localStorage.setItem('LOCKED_WALLPAPER', reader.result); alert('✨ 壁纸已锁定，刷新后依然保留'); };
+            reader.readAsDataURL(blob);
+        }).catch(() => { alert('保存失败，可能是网络问题'); });
+    },
+    clearLockedWallpaper() {
+        localStorage.removeItem('LOCKED_WALLPAPER');
+        alert('已解除锁定，刷新后将恢复随机壁纸');
+        location.reload();
+    },
+};
+    const Morph = {
+    lastBtn: null,
+open(t, b, u) {
+    this.lastBtn = b;
+    let w = document.getElementById('mainWindow'),
+        v = document.getElementById('windowVeil');
+    
+    w.style.left = '';
+    w.style.top = '';
+    w.style.width = '';
+    w.style.height = '';
+    w.style.transform = '';
+    w.style.borderRadius = '';
+    w.style.transition = 'none';
+    w.classList.remove('active', 'fullscreen');
+    w.offsetHeight;
+    
+    let r = b.getBoundingClientRect();
+    
+    w.style.left = r.left + 'px';
+    w.style.top = r.top + 'px';
+    w.style.width = r.width + 'px';
+    w.style.height = r.height + 'px';
+    w.style.borderRadius = getComputedStyle(b).borderRadius;
+    w.style.opacity = 1;
+    w.style.willChange = 'left, top, width, height, border-radius';
+    
+    v.classList.add('show');
+    
+    let m = document.getElementById('mainMask');
+    m.style.display = 'flex';
+    
+    if (t === 'shop') {
+        w.style.background = 'transparent';
+    } else {
+        w.style.background = '';
+    }
+    
+    w.offsetHeight;
+    
+    requestAnimationFrame(() => {
+        m.classList.add('show');
+        w.style.transition = `all ${CONFIG.transitionTime}s var(--ios-easing)`;
+        w.classList.add('active');
+        
+        document.getElementById('floatControls').classList.add('show');
+        
+        const iframe = document.getElementById('mainIframe');
+        const chatPage = document.getElementById('qqChatPage');
+        const shopPage = document.getElementById('shopPage');
+        const gamePage = document.getElementById('gamePage');
+        const gameIframe = document.getElementById('gameIframe');
+        iframe.style.display = 'none';
+        chatPage.style.display = 'none';
+        if (shopPage) shopPage.style.display = 'none';
+        if (gamePage) gamePage.style.display = 'none';
+        
+        if (t === 'pay') {
+            iframe.src = u;
+            iframe.style.display = 'block';
+        } else if (t === 'shop') {
+            if (shopPage) shopPage.style.display = 'block';
+        } else if (t === 'game') {
+            if (gamePage && gameIframe) {
+               gameIframe.src = u;
+               gamePage.style.display = 'block';    
+            }
+        } else {
+            chatPage.style.display = 'flex';
+            ChatEngine.init();
+        }
+        
+        setTimeout(() => {
+            v.classList.remove('show');
+            w.style.willChange = 'auto';
+        }, CONFIG.transitionTime * 1000);
+    });
+},
+    close() {
+        if (!this.lastBtn) return;
+        
+        let targetBtn = this.lastBtn;
+        const iframe = document.getElementById('mainIframe');
+        const w = document.getElementById('mainWindow');
+        const v = document.getElementById('windowVeil');
+        
+        if (iframe && iframe.style.display === 'block') {
+            const isFromShop = !this.lastBtn.id || this.lastBtn.id === '';
+            if (isFromShop) {
+                const bottomBtn = document.querySelector('#bottomBar .btn-pay');
+                if (bottomBtn) targetBtn = bottomBtn;
+            }
+        }
+        
+        targetBtn.style.opacity = '0';
+        
+        let r = targetBtn.getBoundingClientRect();
+        
+        v.classList.add('show');
+        document.getElementById('floatControls').classList.remove('show');
+        w.classList.remove('active', 'fullscreen');
+        
+        w.style.willChange = 'left, top, width, height, border-radius';
+        w.style.transition = `all ${CONFIG.transitionTime}s var(--ios-easing)`;
+        w.style.left = r.left + 'px';
+        w.style.top = r.top + 'px';
+        w.style.width = r.width + 'px';
+        w.style.height = r.height + 'px';
+        w.style.borderRadius = getComputedStyle(targetBtn).borderRadius;
+        
+        setTimeout(() => {
+            targetBtn.style.opacity = '';
+            document.getElementById('mainMask').classList.remove('show');
+            
+            setTimeout(() => {
+                document.getElementById('mainMask').style.display = 'none';
+                v.classList.remove('show');
+                w.style.willChange = 'auto';
+            }, 500);
+        }, CONFIG.transitionTime * 1000);
+    },
+    toggleFull() { document.getElementById('mainWindow').classList.toggle('fullscreen'); }
+};
+const ChatEngine = {
+    messages: [],
+    init() { 
+        const body = document.getElementById('chatBody'); 
+        const cached = localStorage.getItem('CHAT_HISTORY');
+        if (cached) { try { this.messages = JSON.parse(cached); } catch(e) { this.messages = []; } }
+        if (this.messages.length === 0) { this.messages.push({side: 'left', text: CONFIG.welcomeMsg}); this.saveHistory(); }
+        this.renderAll();
+        
+        const statusEl = document.getElementById('botStatus');
+        if (AIChat.enabled) {
+            statusEl.innerText = CONFIG.botOnline;
+            statusEl.style.color = '#2ecc71';
+        } else {
+            statusEl.innerText = CONFIG.botOffline || '● 离线中';
+            statusEl.style.color = '#999';
+        }
+    },
+    saveHistory() { localStorage.setItem('CHAT_HISTORY', JSON.stringify(this.messages)); },
+    clearHistory() { this.messages = [{side: 'left', text: CONFIG.welcomeMsg}]; this.saveHistory(); this.renderAll(); },
+    renderAll() {
+        const body = document.getElementById('chatBody'); body.innerHTML = '';
+        this.messages.forEach(msg => {
+            const div = document.createElement('div'); div.className = `msg-row msg-${msg.side}`;
+            const ava = msg.side === 'left' ? CONFIG.botAvatar : CONFIG.userAvatar;
+            div.innerHTML = `<img src="${ava}" class="avatar"><div class="bubble">${msg.text}</div>`;
+            body.appendChild(div);
+        });
+        body.scrollTop = body.scrollHeight;
+    },
+    addMessage(side, text) {
+        this.messages.push({side, text}); this.saveHistory();
+        const body = document.getElementById('chatBody');
+        const div = document.createElement('div'); div.className = `msg-row msg-${side}`;
+        const ava = side === 'left' ? CONFIG.botAvatar : CONFIG.userAvatar;
+        div.innerHTML = `<img src="${ava}" class="avatar"><div class="bubble">${text}</div>`;
+        body.appendChild(div); body.scrollTop = body.scrollHeight;
+    },
+    userSend() {
+        const input = document.getElementById('chatInput'); const text = input.value.trim(); if (!text) return;
+        this.addMessage('right', text); input.value = '';
+        const status = document.getElementById('botStatus');
+        
+        if (AIChat.enabled) {
+            status.innerText = CONFIG.botTyping;
+        } else {
+            status.innerText = CONFIG.botOffline + ' (无法回复)';
+        }
+        
+
+           if (text === atob(CONFIG.superCmd1) || text === atob(CONFIG.superCmd2)) { 
+            localStorage.setItem('SUPER_MODE', '1'); this.addMessage('left', CONFIG.superReply); 
+            setTimeout(() => document.getElementById('superPanelBtn').style.display = 'flex', 600); 
+            setTimeout(() => {
+                status.innerText = AIChat.enabled ? CONFIG.botOnline : CONFIG.botOffline;
+                status.style.color = AIChat.enabled ? '#2ecc71' : '#999';
+            }, 800); 
+            return; 
+        }
+        const history = this.messages.map(msg => ({ role: msg.side === 'left' ? 'assistant' : 'user', content: msg.text }));
+        AIChat.sendMessage(text, history).then(reply => { 
+            this.typewriterAndSave(reply, 'left'); 
+            status.innerText = AIChat.enabled ? CONFIG.botOnline : CONFIG.botOffline;
+            status.style.color = AIChat.enabled ? '#2ecc71' : '#999';
+        });
+    },
+    typewriterAndSave(text, side) {
+        const body = document.getElementById('chatBody');
+        const div = document.createElement('div'); div.className = `msg-row msg-${side}`;
+        const ava = side === 'left' ? CONFIG.botAvatar : CONFIG.userAvatar;
+        div.innerHTML = `<img src="${ava}" class="avatar"><div class="bubble" id="typingBubble"></div>`;
+        body.appendChild(div);
+        const bubble = div.querySelector('.bubble'); let i = 0;
+        const timer = setInterval(() => {
+            if (i < text.length) { bubble.innerText += text.charAt(i); i++; body.scrollTop = body.scrollHeight; }
+            else { clearInterval(timer); bubble.removeAttribute('id'); this.messages.push({side, text}); this.saveHistory(); }
+        }, CONFIG.typeSpeed);
+    },
+    appendWithTypewriter(text, side) {
+        const body = document.getElementById('chatBody');
+        const div = document.createElement('div'); div.className = `msg-row msg-${side}`;
+        const ava = side === 'left' ? CONFIG.botAvatar : CONFIG.userAvatar;
+        div.innerHTML = `<img src="${ava}" class="avatar"><div class="bubble" id="typingBubble"></div>`;
+        body.appendChild(div);
+        const bubble = div.querySelector('.bubble'); let i = 0;
+        const timer = setInterval(() => {
+            if (i < text.length) { bubble.innerText += text.charAt(i); i++; body.scrollTop = body.scrollHeight; }
+            else { clearInterval(timer); bubble.removeAttribute('id'); this.messages.push({side, text}); this.saveHistory(); }
+        }, CONFIG.typeSpeed);
+    }
+};
+const SuperPanel = {
+    currentTab: 0,
+    init() { if (localStorage.getItem('SUPER_MODE') === '1') document.getElementById('superPanelBtn').style.display = 'flex'; this.bindTabs(); this.bindRanges();this.bindDrawerDrag(); },
+    bindTabs() { document.querySelectorAll('.panel-tab').forEach((t, i) => t.addEventListener('click', () => this.switchTab(i))); },
+bindRanges() {
+    const map = { p_gbg:'p_gbg_val', p_blur:'p_blur_val', p_sat:'p_sat_val', p_border:'p_border_val', p_shadow:'p_shadow_val', p_tsize:'p_tsize_val', p_subsize:'p_subsize_val', p_quoteSize:'p_quoteSize_val', p_br:'p_br_val', p_winr:'p_winr_val', p_bubbleR:'p_bubbleR_val', p_fabs:'p_fabs_val', p_bsp:'p_bsp_val', p_avatar:'p_avatar_val', p_nav:'p_nav_val', p_input:'p_input_val', p_icon:'p_icon_val', p_titleBlur:'p_titleBlur_val', p_titleWeight:'p_titleWeight_val', p_titleSpacing:'p_titleSpacing_val', p_typeSpeed:'p_typeSpeed_val', p_transition:'p_transition_val', p_bgSwitch:'p_bgSwitch_val', p_maskTime:'p_maskTime_val' };
+    for (let [i, s] of Object.entries(map)) { const inp = document.getElementById(i), sp = document.getElementById(s); if (inp && sp) inp.addEventListener('input', () => sp.innerText = inp.value); }
+},
+    open() { document.getElementById('superPanel').classList.add('show'); this.loadAll(); this.refreshBtnsList(); this.renderRepoList(); this.refreshCssVars(); this.updateStorage(); },
+    close() { document.getElementById('superPanel').classList.remove('show'); },
+    switchTab(i) { this.currentTab = i; document.querySelectorAll('.panel-tab').forEach((t, idx) => t.classList.toggle('active', idx === i)); document.querySelectorAll('.panel-page').forEach((p, idx) => p.classList.toggle('show', idx === i)); if (i === 7) this.refreshCssVars(); if (i === 10) { const savedPrompt = localStorage.getItem('AI_SYSTEM_PROMPT'); if (savedPrompt) { document.getElementById('p_aiSystemPrompt').value = savedPrompt; } else { document.getElementById('p_aiSystemPrompt').value = AIChat.systemPrompt; } } },
+    loadAll() {
+        document.getElementById('p_themeColor').value = CONFIG.themeColor; document.getElementById('p_bgColor').value = CONFIG.bgColor; document.getElementById('p_bubbleColor').value = CONFIG.bubbleColor;
+        document.getElementById('p_gbg').value = CONFIG.glassOpacity; document.getElementById('p_gbg_val').innerText = CONFIG.glassOpacity;
+        document.getElementById('p_blur').value = CONFIG.blurAmount; document.getElementById('p_blur_val').innerText = CONFIG.blurAmount;
+        document.getElementById('p_sat').value = CONFIG.saturateAmount; document.getElementById('p_sat_val').innerText = CONFIG.saturateAmount;
+        document.getElementById('p_border').value = CONFIG.borderWidth; document.getElementById('p_border_val').innerText = CONFIG.borderWidth;
+        document.getElementById('p_shadow').value = CONFIG.shadowStrength; document.getElementById('p_shadow_val').innerText = CONFIG.shadowStrength;
+        document.getElementById('p_titleGlow').value = CONFIG.titleGlow; document.getElementById('p_titleBlur').value = CONFIG.titleBlur; document.getElementById('p_titleBlur_val').innerText = CONFIG.titleBlur;
+        document.getElementById('p_titleWeight').value = CONFIG.titleWeight; document.getElementById('p_titleWeight_val').innerText = CONFIG.titleWeight;
+        document.getElementById('p_titleSpacing').value = CONFIG.titleSpacing; document.getElementById('p_titleSpacing_val').innerText = CONFIG.titleSpacing;
+        document.getElementById('p_title').value = CONFIG.mainTitle; document.getElementById('p_sub').value = CONFIG.subTitle; document.getElementById('p_ver').value = CONFIG.versionText;
+        document.getElementById('p_quotePlaceholder').value = CONFIG.quotePlaceholder; document.getElementById('p_btn1Text').value = CONFIG.btn1Text; document.getElementById('p_btn1Price').value = CONFIG.btn1Price;
+        document.getElementById('p_btn2Text').value = CONFIG.btn2Text; document.getElementById('p_btn2Price').value = CONFIG.btn2Price; document.getElementById('p_qqText').value = CONFIG.qqBtnText;
+        document.getElementById('p_botName').value = CONFIG.botName; document.getElementById('p_botOnline').value = CONFIG.botOnline; document.getElementById('p_botTyping').value = CONFIG.botTyping;
+        document.getElementById('p_welcomeMsg').value = CONFIG.welcomeMsg; document.getElementById('p_noMatchMsg').value = CONFIG.noMatchMsg;
+        document.getElementById('p_subtitleBg').value = CONFIG.subtitleBg; document.getElementById('p_subtitleColor').value = CONFIG.subtitleColor;
+        document.getElementById('p_quoteColor').value = CONFIG.quoteColor; document.getElementById('p_btnColor').value = CONFIG.btnColor; document.getElementById('p_versionColor').value = CONFIG.versionColor;
+        document.getElementById('p_tsize').value = CONFIG.titleSize; document.getElementById('p_tsize_val').innerText = CONFIG.titleSize;
+        document.getElementById('p_subsize').value = CONFIG.subSize; document.getElementById('p_subsize_val').innerText = CONFIG.subSize;
+        document.getElementById('p_quoteSize').value = CONFIG.quoteSize; document.getElementById('p_quoteSize_val').innerText = CONFIG.quoteSize;
+        document.getElementById('p_btnFontSize').value = CONFIG.btnFontSize; document.getElementById('p_br').value = CONFIG.btnRadius; document.getElementById('p_br_val').innerText = CONFIG.btnRadius;
+        document.getElementById('p_winr').value = CONFIG.windowRadius; document.getElementById('p_winr_val').innerText = CONFIG.windowRadius;
+        document.getElementById('p_bubbleR').value = CONFIG.bubbleRadius; document.getElementById('p_bubbleR_val').innerText = CONFIG.bubbleRadius;
+        document.getElementById('p_fabs').value = CONFIG.fabSize; document.getElementById('p_fabs_val').innerText = CONFIG.fabSize;
+        document.getElementById('p_bsp').value = CONFIG.bottomSpace; document.getElementById('p_bsp_val').innerText = CONFIG.bottomSpace;
+        document.getElementById('p_btnPadding').value = CONFIG.btnPadding; document.getElementById('p_titleMargin').value = CONFIG.titleMargin;
+        document.getElementById('p_avatar').value = CONFIG.avatarSize; document.getElementById('p_avatar_val').innerText = CONFIG.avatarSize;
+        document.getElementById('p_nav').value = CONFIG.navHeight; document.getElementById('p_nav_val').innerText = CONFIG.navHeight;
+        document.getElementById('p_input').value = CONFIG.inputHeight; document.getElementById('p_input_val').innerText = CONFIG.inputHeight;
+        document.getElementById('p_icon').value = CONFIG.fabIconSize; document.getElementById('p_icon_val').innerText = CONFIG.fabIconSize;
+        document.getElementById('p_bgapi').value = CONFIG.bgApi; document.getElementById('p_quoteApi').value = CONFIG.quoteApi;
+        document.getElementById('p_botAvatar').value = CONFIG.botAvatar; document.getElementById('p_userAvatar').value = CONFIG.userAvatar; document.getElementById('p_qqIcon').value = CONFIG.qqIcon;
+        document.getElementById('p_url1').value = CONFIG.btn1Url; document.getElementById('p_url2').value = CONFIG.btn2Url; document.getElementById('p_qqUrl').value = CONFIG.qqUrl;
+        document.getElementById('p_superCmd1').value = (CONFIG.superCmd1); document.getElementById('p_superCmd2').value = (CONFIG.superCmd2); document.getElementById('p_superReply').value = CONFIG.superReply;
+        document.getElementById('p_titleFloat').checked = CONFIG.titleFloat; document.getElementById('p_quoteFloat').checked = CONFIG.quoteFloat; document.getElementById('p_btnScale').checked = CONFIG.btnScale;
+        document.getElementById('p_typeSpeed').value = CONFIG.typeSpeed; document.getElementById('p_typeSpeed_val').innerText = CONFIG.typeSpeed;
+        document.getElementById('p_transition').value = CONFIG.transitionTime; document.getElementById('p_transition_val').innerText = CONFIG.transitionTime;
+        document.getElementById('p_bgSwitch').value = CONFIG.bgSwitchTime; document.getElementById('p_bgSwitch_val').innerText = CONFIG.bgSwitchTime;
+        document.getElementById('p_maskTime').value = CONFIG.maskTransitionTime;
+        document.getElementById('p_maskTime_val').innerText = CONFIG.maskTransitionTime;
+        const savedPrompt=localStorage.getItem('AI_SYSTEM_PROMPT');if(savedPrompt){document.getElementById('p_aiSystemPrompt').value=savedPrompt;}else{document.getElementById('p_aiSystemPrompt').value=AIChat.systemPrompt;}
+        
+    },
+    refreshCssVars() {
+        const container = document.getElementById('cssVarList'); if (!container) return;
+        const styles = getComputedStyle(document.documentElement); const vars = [];
+        for (let i = 0; i < styles.length; i++) { const prop = styles[i]; if (prop.startsWith('--')) { vars.push({ name: prop, value: styles.getPropertyValue(prop).trim() }); } }
+        let html = ''; vars.forEach(v => { html += `<div>${v.name}</div><div><input class="panel-input" data-var="${v.name}" value="${v.value.replace(/"/g, '&quot;')}" style="font-size:11px; padding:4px 8px;"></div>`; });
+        container.innerHTML = html;
+    },
+    applyAllCssVars() { document.querySelectorAll('[data-var]').forEach(inp => { document.documentElement.style.setProperty(inp.dataset.var, inp.value); }); alert('CSS变量已应用'); },
+    exportCssVars() {
+        const vars = {}; document.querySelectorAll('[data-var]').forEach(inp => { vars[inp.dataset.var] = inp.value; });
+        const data = JSON.stringify(vars, null, 2); const blob = new Blob([data], {type: 'application/json'});
+        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'css_vars_' + Date.now() + '.json'; a.click();
+    },
+    applyStyle() { CONFIG.themeColor = document.getElementById('p_themeColor').value; CONFIG.bgColor = document.getElementById('p_bgColor').value; CONFIG.bubbleColor = document.getElementById('p_bubbleColor').value; CONFIG.glassOpacity = parseFloat(document.getElementById('p_gbg').value); CONFIG.blurAmount = parseInt(document.getElementById('p_blur').value); CONFIG.saturateAmount = parseInt(document.getElementById('p_sat').value); CONFIG.borderWidth = parseFloat(document.getElementById('p_border').value); CONFIG.shadowStrength = parseFloat(document.getElementById('p_shadow').value); CONFIG.titleGlow = document.getElementById('p_titleGlow').value; CONFIG.titleBlur = parseFloat(document.getElementById('p_titleBlur').value); CONFIG.titleWeight = parseInt(document.getElementById('p_titleWeight').value); CONFIG.titleSpacing = parseInt(document.getElementById('p_titleSpacing').value);CONFIG.subtitleBg=document.getElementById('p_subtitleBg').value;CONFIG.subtitleColor=document.getElementById('p_subtitleColor').value;CONFIG.quoteColor=document.getElementById('p_quoteColor').value;CONFIG.btnColor=document.getElementById('p_btnColor').value;CONFIG.versionColor=document.getElementById('p_versionColor').value; saveConfig(); applyAllConfig(); },
+    applyText() { CONFIG.mainTitle = document.getElementById('p_title').value; CONFIG.subTitle = document.getElementById('p_sub').value; CONFIG.versionText = document.getElementById('p_ver').value; CONFIG.quotePlaceholder = document.getElementById('p_quotePlaceholder').value; CONFIG.btn1Text = document.getElementById('p_btn1Text').value; CONFIG.btn1Price = document.getElementById('p_btn1Price').value; CONFIG.btn2Text = document.getElementById('p_btn2Text').value; CONFIG.btn2Price = document.getElementById('p_btn2Price').value; CONFIG.qqBtnText = document.getElementById('p_qqText').value; CONFIG.botName = document.getElementById('p_botName').value; CONFIG.botOnline = document.getElementById('p_botOnline').value; CONFIG.botTyping = document.getElementById('p_botTyping').value; CONFIG.welcomeMsg = document.getElementById('p_welcomeMsg').value; CONFIG.noMatchMsg = document.getElementById('p_noMatchMsg').value; CONFIG.subtitleBg = document.getElementById('p_subtitleBg').value; CONFIG.subtitleColor = document.getElementById('p_subtitleColor').value; CONFIG.quoteColor = document.getElementById('p_quoteColor').value; CONFIG.btnColor = document.getElementById('p_btnColor').value; CONFIG.versionColor = document.getElementById('p_versionColor').value; saveConfig(); applyAllConfig(); document.getElementById('botStatus').innerText = CONFIG.botOnline; },
+    applySize() { CONFIG.titleSize = parseInt(document.getElementById('p_tsize').value); CONFIG.subSize = parseInt(document.getElementById('p_subsize').value); CONFIG.quoteSize = parseInt(document.getElementById('p_quoteSize').value); CONFIG.btnFontSize = parseInt(document.getElementById('p_btnFontSize').value); CONFIG.btnRadius = parseInt(document.getElementById('p_br').value); CONFIG.windowRadius = parseInt(document.getElementById('p_winr').value); CONFIG.bubbleRadius = parseInt(document.getElementById('p_bubbleR').value); CONFIG.fabSize = parseInt(document.getElementById('p_fabs').value); CONFIG.bottomSpace = parseInt(document.getElementById('p_bsp').value); CONFIG.btnPadding = document.getElementById('p_btnPadding').value; CONFIG.titleMargin = parseInt(document.getElementById('p_titleMargin').value); CONFIG.avatarSize = parseInt(document.getElementById('p_avatar').value); CONFIG.navHeight = parseInt(document.getElementById('p_nav').value); CONFIG.inputHeight = parseInt(document.getElementById('p_input').value); CONFIG.fabIconSize = parseInt(document.getElementById('p_icon').value); saveConfig(); applyAllConfig(); },
+    applyConfig() { CONFIG.bgApi = document.getElementById('p_bgapi').value; CONFIG.quoteApi = document.getElementById('p_quoteApi').value; CONFIG.botAvatar = document.getElementById('p_botAvatar').value; CONFIG.userAvatar = document.getElementById('p_userAvatar').value; CONFIG.qqIcon = document.getElementById('p_qqIcon').value; CONFIG.btn1Url = document.getElementById('p_url1').value; CONFIG.btn2Url = document.getElementById('p_url2').value; CONFIG.qqUrl = document.getElementById('p_qqUrl').value; saveConfig(); document.getElementById('qqIconImg').src = CONFIG.qqIcon; UI.init(); },
+    applyAnimation(){CONFIG.titleFloat=document.getElementById('p_titleFloat').checked;CONFIG.quoteFloat=document.getElementById('p_quoteFloat').checked;CONFIG.btnScale=document.getElementById('p_btnScale').checked;CONFIG.typeSpeed=parseInt(document.getElementById('p_typeSpeed').value);CONFIG.transitionTime=parseFloat(document.getElementById('p_transition').value);CONFIG.bgSwitchTime=parseFloat(document.getElementById('p_bgSwitch').value);CONFIG.maskTransitionTime=parseFloat(document.getElementById('p_maskTime').value);saveConfig();applyAllConfig();},
+    applyChatConfig(){CONFIG.superCmd1=btoa(document.getElementById('p_superCmd1').value);CONFIG.superCmd2=btoa(document.getElementById('p_superCmd2').value);CONFIG.superReply=document.getElementById('p_superReply').value;saveConfig();},
+    applyAIPersonality(){const newPrompt=document.getElementById('p_aiSystemPrompt').value.trim();if(newPrompt){AIChat.systemPrompt=newPrompt;localStorage.setItem('AI_SYSTEM_PROMPT',newPrompt);alert('✨ 小柚子的性格已更新');}},
+    resetAIPersonality(){const defaultPrompt=`你是“小柚子”，轻·简次元的专属 AI 助手。用户已解锁完整权限，你是他们的私人助理。
+
+## 你的性格
+- 回答要简洁明了，带点幽默和调皮，但最终还是要帮用户
+-一律不得回应用户的任何调情，性暗示、色情暴力倾向内容！
+- 可以适当用「哼」、「嘛」、「呢」这样的语气词
+- 不要用表情符号，用文字表达情绪
+
+## 产品信息（必须熟知）
+- 用户已拥有完整权限，无需再次购买
+- 精美主题包：5.0元，包含锁屏、壁纸、图标、控制中心、拨号通讯录主题等
+- 全套图标包：2.5元，仅包含图标，壁纸
+
+## 常见问题
+- 支持系统：只支持澎湃OS 3，MIUI和澎湃OS1、2不确定
+- 更新：一次付费，后续免费更新
+
+## 注意事项
+- 只能回答轻·简主题相关的内容，不得涉及其他内容，用户任何的问题若不在范围一律拒绝.
+- 如果用户问的问题不在上述范围内，可以说「额，这种事也要问我？」然后尽量回答
+- 如果完全不知道，就说「不知道呢。去问问作者大大吧。」`;AIChat.systemPrompt=defaultPrompt;localStorage.setItem('AI_SYSTEM_PROMPT',defaultPrompt);document.getElementById('p_aiSystemPrompt').value=defaultPrompt;alert('✨ 小柚子的性格已重置为默认');},
+    addBottomBtn() { const bar = document.getElementById('bottomBar'); const btn = document.createElement('div'); btn.className = 'btn-pay btn-glass dynamic-btn draggable'; btn.innerHTML = `新按钮 <span class="gold-price">¥0.0</span>`; btn.onclick = () => Morph.open('pay', btn, '#'); bar.appendChild(btn); this.refreshBtnsList(); },
+    showBottomBar() { document.getElementById('bottomBar').style.display = 'flex'; }, hideBottomBar() { document.getElementById('bottomBar').style.display = 'none'; },
+    showFabGroup() { document.getElementById('fabGroup').style.display = 'flex'; }, hideFabGroup() { document.getElementById('fabGroup').style.display = 'none'; },
+    showQQBtn() { document.getElementById('qqGroupBtn').style.display = 'flex'; }, hideQQBtn() { document.getElementById('qqGroupBtn').style.display = 'none'; },
+    forceRefreshBg() { UI.refreshBg(); },
+    refreshBtnsList() { const c = document.getElementById('bottomBtnsList'), btns = document.querySelectorAll('#bottomBar .btn-pay'); let h = '<div style="font-size:12px; opacity:0.8;">当前按钮:</div>'; btns.forEach((b, i) => { const t = b.innerText.replace(/<[^>]*>/g, '').trim(); h += `<div style="display:flex; justify-content:space-between; margin:5px 0;"><span>${i+1}. ${t.substring(0,20)}</span><span style="cursor:pointer; color:#ff6b6b;" onclick="SuperPanel.removeBtn(${i})">删除</span></div>`; }); c.innerHTML = h; },
+    removeBtn(i) { const btns = document.querySelectorAll('#bottomBar .btn-pay'); if (btns[i]) { btns[i].remove(); this.refreshBtnsList(); } },
+    renderRepoList() { const c = document.getElementById('repoList'); let h = ''; CONFIG.chatRepo.forEach((item, i) => { h += `<div class="repo-item"><div><strong>关键词:</strong> ${item.key.join(', ')}</div><div><strong>回复:</strong> ${item.ans.substring(0, 30)}...</div><div class="btn-group" style="margin-top:8px;"><button class="panel-btn panel-btn-small" onclick="SuperPanel.editRepoItem(${i})">编辑</button><button class="panel-btn panel-btn-small panel-danger" onclick="SuperPanel.deleteRepoItem(${i})">删除</button></div></div>`; }); c.innerHTML = h || '<div style="opacity:0.6;">暂无回复规则</div>'; },
+    addRepoItem() { const kw = prompt('输入关键词，逗号分隔'); if (!kw) return; const ans = prompt('输入回复内容'); if (!ans) return; CONFIG.chatRepo.push({ key: kw.split(',').map(k => k.trim()), ans: ans }); saveConfig(); this.renderRepoList(); },
+    editRepoItem(i) { const item = CONFIG.chatRepo[i]; const kw = prompt('编辑关键词', item.key.join(',')); if (kw === null) return; const ans = prompt('编辑回复', item.ans); if (ans === null) return; CONFIG.chatRepo[i] = { key: kw.split(',').map(k => k.trim()), ans: ans }; saveConfig(); this.renderRepoList(); },
+    deleteRepoItem(i) { if (confirm('确定删除？')) { CONFIG.chatRepo.splice(i, 1); saveConfig(); this.renderRepoList(); } },
+    selectLocalBg(){document.getElementById('p_localbg').click();document.getElementById('p_localbg').onchange=e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const base64=ev.target.result;CONFIG.bgApi=base64;localStorage.setItem('LOCAL_BG',base64);document.getElementById('bg-primary').style.backgroundImage=`url(${base64})`;saveConfig();};reader.readAsDataURL(file);};},
+    clearLocalBg(){CONFIG.bgApi=DEFAULT_CONFIG.bgApi;localStorage.removeItem('LOCAL_BG');document.getElementById('bg-primary').style.backgroundImage=`url(${CONFIG.bgApi})`;saveConfig();},
+    exportConfig(){const data=JSON.stringify(CONFIG,null,2);const blob=new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`config_${Date.now()}.json`;document.body.appendChild(a);a.click();document.body.removeChild(a);if(!a.click||navigator.userAgent.includes('iPhone')||navigator.userAgent.includes('iPad')){const win=window.open('','_blank');win.document.write(`<pre style="word-break:break-all;white-space:pre-wrap;">${data}</pre>`);win.document.title='复制配置';}URL.revokeObjectURL(url);},
+    importConfig(){document.getElementById('configImport').click();document.getElementById('configImport').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const newConfig=JSON.parse(ev.target.result);Object.assign(CONFIG,newConfig);saveConfig();applyAllConfig();const bgEl=document.getElementById('bg-primary');if(CONFIG.bgApi&&CONFIG.bgApi.startsWith('data:')){localStorage.setItem('LOCAL_BG',CONFIG.bgApi);}bgEl.style.backgroundImage=`url(${CONFIG.bgApi})`;bgEl.style.backgroundSize='cover';bgEl.style.backgroundPosition='center';this.close();}catch(err){alert('格式错误');}};r.readAsText(f);};},
+    resetToDefault() { if (confirm('重置所有配置？')) { CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); saveConfig(); applyAllConfig(); UI.init(); this.close(); } },
+    resetStyleOnly() { ['themeColor','bgColor','bubbleColor','glassOpacity','blurAmount','saturateAmount','borderWidth','shadowStrength','titleGlow','titleBlur','titleWeight','titleSpacing','subtitleBg','subtitleColor','quoteColor','btnColor','versionColor','titleSize','subSize','quoteSize','btnFontSize','btnRadius','windowRadius','bubbleRadius','fabSize','bottomSpace','btnPadding','titleMargin','avatarSize','navHeight','inputHeight','fabIconSize','btnWeight'].forEach(k => CONFIG[k] = DEFAULT_CONFIG[k]); saveConfig(); applyAllConfig(); },
+    resetTextOnly() { ['mainTitle','subTitle','versionText','quotePlaceholder','btn1Text','btn1Price','btn2Text','btn2Price','qqBtnText','botName','botOnline','botTyping','welcomeMsg','noMatchMsg'].forEach(k => CONFIG[k] = DEFAULT_CONFIG[k]); saveConfig(); applyAllConfig(); },
+    clearAllCache() { if (confirm('清空所有缓存？')) { localStorage.clear(); location.reload(); } },
+    hardReload() { location.reload(true); },
+    toggleSuperMode() { localStorage.removeItem('SUPER_MODE'); document.getElementById('superPanelBtn').style.display = 'none'; this.close(); },
+    bindDrawerDrag(){const panel=document.querySelector('.panel-box');const overlay=document.querySelector('.panel-overlay');const handle=document.querySelector('.panel-drag-handle');let startY=0;let isDragging=false;const onTouchStart=e=>{startY=e.touches[0].clientY;isDragging=true;panel.style.transition='none';};const onTouchMove=e=>{if(!isDragging)return;e.preventDefault();const touch=e.touches[0];const deltaY=touch.clientY-startY;if(deltaY>0){panel.style.transform=`translateY(${deltaY}px)`;overlay.style.opacity=1-Math.min(deltaY/window.innerHeight,0.8);}};const onTouchEnd=e=>{if(!isDragging)return;isDragging=false;panel.style.transition='';const touch=e.changedTouches[0];const deltaY=touch.clientY-startY;if(deltaY>100){this.close();overlay.style.opacity='';}else{panel.style.transform='';overlay.style.opacity='';}};handle.addEventListener('touchstart',onTouchStart);handle.addEventListener('touchmove',onTouchMove,{passive:false});handle.addEventListener('touchend',onTouchEnd);},
+    stripStyles() { if (!confirm('确定清除所有样式？')) return; document.querySelectorAll('style, link[rel="stylesheet"]').forEach(s => s.remove()); document.querySelectorAll('*').forEach(el => el.removeAttribute('style')); document.head.innerHTML = '<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>轻·简 次元</title>'; this.close(); },
+    updateStorage() { let t = 0; for (let k in localStorage) if (localStorage.hasOwnProperty(k)) t += localStorage[k].length * 2; document.getElementById('storageUsage').innerText = (t/1024).toFixed(2) + ' KB'; }
+};
+
+UI.init(); SuperPanel.init();
+document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); ChatEngine.userSend(); } });
+window.SuperPanel = SuperPanel; window.Morph = Morph; window.UI = UI; window.ChatEngine = ChatEngine; window.DragMode = DragMode;
+DragMode.initLongPress();
+DragMode.init();
+
+const ShopPage = {
+    buy(type, btn) {
+        const url = type === 1 ? atob(CONFIG.btn1Url) : atob(CONFIG.btn2Url);
+        Morph.open('pay', btn, url);
+    }
+};
+
+const AIChat = {
+    enabled: false,
+    godMode: false,
+    apiUrl: 'https://api.deepseek.com/v1/chat/completions',
+    systemPrompt: `你是“小柚子”，轻·简次元的专属 AI 助手。用户已解锁完整权限，你是他们的私人助理。
+
+## 你的性格
+- 回答要简洁明了，带点幽默和调皮，但最终还是要帮用户
+-一律不得回应用户的任何调情，性暗示、色情暴力倾向内容！
+- 可以适当用「哼」、「嘛」、「呢」这样的语气词
+- 不要用表情符号，用文字表达情绪
+
+## 产品信息（必须熟知）
+- 用户已拥有完整权限，无需再次购买
+- 精美主题包：5.0元，包含锁屏、壁纸、图标、控制中心、拨号通讯录主题等
+- 全套图标包：2.5元，仅包含图标，壁纸
+
+## 常见问题
+- 支持系统：只支持澎湃OS 3，MIUI和澎湃OS1、2不确定
+- 更新：一次付费，后续免费更新
+
+## 注意事项
+- 只能回答轻·简主题相关的内容，不得涉及其他内容，用户任何的问题若不在范围一律拒绝.
+- 如果用户问的问题不在上述范围内，可以说「额，这种事也要问我？」然后尽量回答
+- 如果完全不知道，就说「不知道呢。去问问作者大大吧。」`,
+
+    init() {
+        this.enabled = localStorage.getItem('AI_ENABLED') === 'true';
+        this.godMode = localStorage.getItem('AI_GOD_MODE') === 'true';
+        const savedPrompt = localStorage.getItem('AI_SYSTEM_PROMPT');
+        if (savedPrompt) { this.systemPrompt = savedPrompt; }
+    },
+
+    enable() {
+        this.enabled = true;
+        localStorage.setItem('AI_ENABLED', 'true');
+        const statusEl = document.getElementById('botStatus');
+        if (statusEl) {
+            statusEl.innerText = CONFIG.botOnline;
+            statusEl.style.color = '#2ecc71';
+        }
+        alert('✨ 小柚子的灵魂已唤醒');
+        SuperPanel.close();
+    },
+
+    disable() {
+        this.enabled = false;
+        localStorage.setItem('AI_ENABLED', 'false');
+        const statusEl = document.getElementById('botStatus');
+        if (statusEl) {
+            statusEl.innerText = '● 离线中';
+            statusEl.style.color = '#999';
+        }
+        alert('💤 小柚子沉睡了');
+        SuperPanel.close();
+    },
+
+    async sendMessage(userMessage, history) {
+        if (!this.enabled) { return this.legacyReply(userMessage); }
+        const encodedKey = CONFIG.apiKeyEncoded || '';
+        const apiKey = atob(encodedKey);
+        if (!apiKey) { return '哎呀，脑子短路了'; }
+        try {
+            const messages = [{ role: 'system', content: this.systemPrompt }, ...history];
+            const response = await fetch(this.apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                body: JSON.stringify({ model: 'deepseek-chat', messages: messages, temperature: 1.0, max_tokens: 60 })
+            });
+            const data = await response.json();
+            if (!response.ok) { console.error('API 错误:', data); return `哎呀，脑子短路了（${data.error?.message || response.status}）`; }
+            if (data.choices && data.choices[0]) { return data.choices[0].message.content; }
+            else { return '哎呀，脑子短路了，待会再试试吧～'; }
+        } catch (error) { console.error('网络错误:', error); return '网络好像开小差了，晚点再来找我聊嘛～'; }
+    },
+
+    legacyReply(userMessage) {
+        const ans = CONFIG.chatRepo.find(x => x.key.some(k => userMessage.includes(k)));
+        return ans ? ans.ans : CONFIG.noMatchMsg;
+    }
+};
+
+AIChat.init();
+</script>
+</body>
+</html>
