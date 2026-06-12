@@ -804,13 +804,13 @@
             <div class="panel-group">
                 <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                     <div>
-                        <h3 style="font-size:18px; font-weight:700;">精美主题包</h3>
-                        <p style="opacity:0.6; font-size:13px;">完整版 · 一劳永逸</p>
+                        <h3 style="font-size:18px; font-weight:700;">轻调II 主题</h3>
+                        <p style="opacity:0.6; font-size:13px;">完整包 · 全量内容</p>
                     </div>
-                    <span class="gold-price" style="font-size:24px;">¥5.5</span>
+                    <span class="gold-price" style="font-size:24px;">¥6.0</span>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:16px 0;">
-                    <span>✓ 锁屏美化</span><span>✓ 猫耳电池</span>
+                    <span>✓ 锁屏美化</span><span>✓ 控制中心美化</span>
                     <span>✓ 全套图标</span><span>✓ 状态栏优化</span>
                 </div>
                 <button class="panel-btn panel-success" style="width:100%;" onclick="ShopPage.buy(1, this)">立即购买</button>
@@ -818,13 +818,13 @@
             <div class="panel-group">
                 <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                     <div>
-                        <h3 style="font-size:18px; font-weight:700;">全套图标包</h3>
-                        <p style="opacity:0.6; font-size:13px;">轻量版 · 仅图标壁纸</p>
+                        <h3 style="font-size:18px; font-weight:700;">轻调II 图标</h3>
+                        <p style="opacity:0.6; font-size:13px;">轻量版 · 图标壁纸</p>
                     </div>
-                    <span class="gold-price" style="font-size:24px;">¥3.5</span>
+                    <span class="gold-price" style="font-size:24px;">¥3.0</span>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:16px 0;">
-                    <span>✓ 全套图标</span><span>✓ 精选壁纸</span>
+                    <span>✓ 全套图标</span><span>✓ 普通壁纸</span>
                 </div>
                 <button class="panel-btn" style="width:100%;" onclick="ShopPage.buy(2, this)">立即购买</button>
             </div>
@@ -852,7 +852,7 @@ const DEFAULT_CONFIG = {
     glassOpacity: 0.28, blurAmount: 30, saturateAmount: 210, borderWidth: 1, shadowStrength: 0.18,
     titleGlow: '0 0 20px rgba(255,255,255,0.55)', titleBlur: 0.4, titleWeight: 800, titleSpacing: -3,
     titleBrightness: 1.5, titleContrast: 1.2,
-    mainTitle: '轻·简', subTitle: '轻·简 次元', versionText: '· VERSION 202604001 ·', quotePlaceholder: '...',
+    mainTitle: '轻·简', subTitle: '轻·简 次元', versionText: '· VERSION 202606001 ·', quotePlaceholder: '...',
     btn1Text: '获取主题', btn1Price: '🛒', btn2Text: '', btn2Price: '', qqBtnText: '加入讨论！',
     botName: '小柚子（助手）', botOnline: '● 在线中', botOffline: '● 离线中', botTyping: '● 对方正在输入...', 
     welcomeMsg: 'Ciallo～(∠・ω< )⌒★', noMatchMsg: '（自动回复）小柚子睡着了💤，似乎有什么办法可以叫醒她～',
@@ -1009,7 +1009,7 @@ const UI = {
         this.loadQuote();
         applyAllConfig();
         
-        const QQ_TEXTS = ['加入讨论！', '一起van♂', '群里好多大佬', '来玩嘛大爷～', '来群里摸鱼', '暗中观察', 'kira～☆', '群友召唤术', '戳我进群'];
+        const QQ_TEXTS = ['加入讨论！', '一起van♂', '群里好多大佬', '来玩嘛大爷～', '来群里交流', '暗中观察', 'kira～☆', '群友召唤术', '戳我进群'];
         const randomIndex = Math.floor(Math.random() * QQ_TEXTS.length);
         document.getElementById('qqBtnText').innerText = QQ_TEXTS[randomIndex];
         document.getElementById('qqGroupBtn').addEventListener('click', function() {
@@ -1368,22 +1368,22 @@ bindRanges() {
     resetAIPersonality(){const defaultPrompt=`你是“小柚子”，轻·简次元的专属 AI 助手。用户已解锁完整权限，你是他们的私人助理。
 
 ## 你的性格
-- 回答要简洁明了，带点幽默和调皮，但最终还是要帮用户
+- 回答要简洁明了，不得幽默和调皮，但最终还是要帮用户
 -一律不得回应用户的任何调情，性暗示、色情暴力倾向内容！
 - 可以适当用「哼」、「嘛」、「呢」这样的语气词
 - 不要用表情符号，用文字表达情绪
 
 ## 产品信息（必须熟知）
 - 用户已拥有完整权限，无需再次购买
-- 精美主题包：5.0元，包含锁屏、壁纸、图标、控制中心、拨号通讯录主题等
-- 全套图标包：2.5元，仅包含图标，壁纸
+- 精美主题包：6.0元，包含锁屏、壁纸、图标、控制中心、拨号通讯录主题等
+- 全套图标包：3.0元，仅包含图标，壁纸
 
 ## 常见问题
 - 支持系统：只支持澎湃OS 3，MIUI和澎湃OS1、2不确定
 - 更新：一次付费，后续免费更新
 
 ## 注意事项
-- 只能回答轻·简主题相关的内容，不得涉及其他内容，用户任何的问题若不在范围一律拒绝.
+- 只能回答轻·简系列主题相关的内容，不得涉及其他内容，用户任何的问题若不在范围一律拒绝.
 - 如果用户问的问题不在上述范围内，可以说「额，这种事也要问我？」然后尽量回答
 - 如果完全不知道，就说「不知道呢。去问问作者大大吧。」`;AIChat.systemPrompt=defaultPrompt;localStorage.setItem('AI_SYSTEM_PROMPT',defaultPrompt);document.getElementById('p_aiSystemPrompt').value=defaultPrompt;alert('✨ 小柚子的性格已重置为默认');},
     addBottomBtn() { const bar = document.getElementById('bottomBar'); const btn = document.createElement('div'); btn.className = 'btn-pay btn-glass dynamic-btn draggable'; btn.innerHTML = `新按钮 <span class="gold-price">¥0.0</span>`; btn.onclick = () => Morph.open('pay', btn, '#'); bar.appendChild(btn); this.refreshBtnsList(); },
@@ -1432,22 +1432,22 @@ const AIChat = {
     systemPrompt: `你是“小柚子”，轻·简次元的专属 AI 助手。用户已解锁完整权限，你是他们的私人助理。
 
 ## 你的性格
-- 回答要简洁明了，带点幽默和调皮，但最终还是要帮用户
+- 回答要简洁明了，不得幽默和调皮，但最终还是要帮用户
 -一律不得回应用户的任何调情，性暗示、色情暴力倾向内容！
 - 可以适当用「哼」、「嘛」、「呢」这样的语气词
 - 不要用表情符号，用文字表达情绪
 
 ## 产品信息（必须熟知）
 - 用户已拥有完整权限，无需再次购买
-- 精美主题包：5.0元，包含锁屏、壁纸、图标、控制中心、拨号通讯录主题等
-- 全套图标包：2.5元，仅包含图标，壁纸
+- 精美主题包：6.0元，包含锁屏、壁纸、图标、控制中心、拨号通讯录主题等
+- 全套图标包：3.0元，仅包含图标，壁纸
 
 ## 常见问题
 - 支持系统：只支持澎湃OS 3，MIUI和澎湃OS1、2不确定
 - 更新：一次付费，后续免费更新
 
 ## 注意事项
-- 只能回答轻·简主题相关的内容，不得涉及其他内容，用户任何的问题若不在范围一律拒绝.
+- 只能回答轻·简系列主题相关的内容，不得涉及其他内容，用户任何的问题若不在范围一律拒绝.
 - 如果用户问的问题不在上述范围内，可以说「额，这种事也要问我？」然后尽量回答
 - 如果完全不知道，就说「不知道呢。去问问作者大大吧。」`,
 
